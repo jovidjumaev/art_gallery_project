@@ -1,0 +1,56 @@
+.form-selection-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    background: linear-gradient(to right, #e0eafc, #cfdef3); /* soft blue fade */
+  }
+  
+  .form-selection-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  .form-selection-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    color: #2c3e50;
+  }
+  
+  .form-selection-container select {
+    width: 100%;
+    padding: 14px 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    background-color: #f8f8f8;
+    transition: border-color 0.2s ease;
+  }
+  
+  .form-selection-container select:focus {
+    border-color: #2980b9;
+    outline: none;
+  }
+  
+  .form-selection-container button {
+    padding: 12px 24px;
+    font-size: 1rem;
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .form-selection-container button:hover {
+    background-color: #2471a3;
+  }
+  

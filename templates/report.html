@@ -1,0 +1,32 @@
+
+
+{% extends 'index.html' %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/report-style.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="report-selection-wrapper">
+  <div class="report-selection-container">
+    <h2>Select Report</h2>
+
+    <select id="report-select">
+      <option value="" disabled selected>Select a report</option>
+      <option value="active-artists">Active Artists Summary Report</option>
+      <option value="individual-artist">Individual Artist Sales Report</option>
+      <option value="collectors-summary">Collectors Summary Report</option>
+      <option value="individual-collector">Individual Collector Sales Report</option>
+      <option value="works-for-sale">Works for Sale Report</option>
+      <option value="sales-this-week">Sales This Week Report</option>
+      <option value="aged-artworks">Aged Artworks Report</option>
+      <option value="art-show-details">Art Show Details</option>
+    </select>
+
+    <button id="select-report-btn" name="select">Select</button>
+  </div>
+</div>
+
+
+<script src="{{ url_for('static', path='js/report-select.js') }}"></script>
+{% endblock %}

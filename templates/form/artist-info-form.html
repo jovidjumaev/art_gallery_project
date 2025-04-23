@@ -1,0 +1,55 @@
+
+{% extends 'index.html' %}
+
+{% block content %}
+  <form >
+    <label>Date of Interview</label>
+    <input type="date" name="interview_date">
+
+    <label>Name of Interviewer</label>
+    <input type="text" name="interviewer_name">
+
+    <div class="form-row">
+      <div>
+        <label>Artist Last Name</label>
+        <input type="text" name="artist_last_name">
+      </div>
+      <div>
+        <label>Artist First Name</label>
+        <input type="text" name="artist_first_name">
+      </div>
+    </div>
+
+    <label>Street</label>
+    <input type="text" name="street">
+
+    <div class="form-row">
+      <input type="text" name="city" placeholder="City">
+      <input type="text" name="state" placeholder="State">
+      <input type="text" name="zip" placeholder="Zip">
+    </div>
+
+    <label>Telephone</label>
+    <div class="form-row">
+      <input type="text" name="area_code" placeholder="Area Code">
+      <input type="text" name="phone_number" placeholder="Phone Number">
+    </div>
+
+    <label>Social Security Number</label>
+    <input type="text" name="ssn">
+
+    <label>Usual Type</label>
+    <input type="text" name="usual_type">
+
+    <label>Usual Medium</label>
+    <input type="text" name="usual_medium">
+
+    <label>Usual Style</label>
+    <input type="text" name="usual_style">
+
+    <button type="submit">Submit</button>
+  </form>
+  {% endblock %}
+  {% block script %}
+  <script src="{{ url_for('static', path='js/artist-form-input.js') }}?v=99"></script>
+  {% endblock %}

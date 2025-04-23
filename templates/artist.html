@@ -1,0 +1,25 @@
+
+
+{% extends 'index.html' %}
+
+{% block content %}
+<h1>All Artists</h1>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Medium</th>
+        <th>Style</th>
+    </tr>
+    {% for artist in artists %}
+    <tr>
+        <td>{{ artist.artistid }}</td>
+        <td>{{ artist.firstname }}</td>
+        <td>{{ artist.lastname }}</td>
+        <td>{{ artist.usualmedium }}</td>
+        <td>{{ artist.usualstyle }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
