@@ -11,17 +11,19 @@
   <div class="report-selection-container">
     <h2>Select Report</h2>
 
-    <select id="report-select">
-      <option value="" disabled selected>Select a report</option>
-      <option value="active-artists">Active Artists Summary Report</option>
-      <option value="individual-artist">Individual Artist Sales Report</option>
-      <option value="collectors-summary">Collectors Summary Report</option>
-      <option value="individual-collector">Individual Collector Sales Report</option>
-      <option value="works-for-sale">Works for Sale Report</option>
-      <option value="sales-this-week">Sales This Week Report</option>
-      <option value="aged-artworks">Aged Artworks Report</option>
-      <option value="art-show-details">Art Show Details</option>
-    </select>
+    <div class="report-list">
+      <ul>
+        <li><a href="/active-artists">Active Artists Summary Report</a></li>
+        <li><a href="/individual-collector-sale">Individual Artist Sales Report</a></li>
+        <li><a href="/report/collectors-summary">Collectors Summary Report</a></li>
+        <li><a href="/report/individual-collector">Individual Collector Sales Report</a></li>
+        <li><a href="/work-for-sale">Works for Sale Report</a></li>
+        <li><a href="/report/sales-this-week">Sales This Week Report</a></li>
+        <li><a href="/report/aged-artworks">Aged Artworks Report</a></li>
+        <li><a href="/report/art-show-details">Art Show Details</a></li>
+      </ul>
+    </div>
+    
 
     <button id="select-report-btn" name="select">Select</button>
   </div>

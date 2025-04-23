@@ -1,0 +1,40 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<h1 class="report-title">Collectors Summary Report</h1>
+
+<div class="table-wrapper">
+  <div class="table-container">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th rowspan="2">Collector Name</th>
+          <th rowspan="2">Address</th>
+          <th rowspan="2">Phone</th>
+          <th colspan="4">Preferred Artist</th>
+          <th colspan="4">Preferred Type</th>
+          <th colspan="4">Preferred Medium</th>
+          <th colspan="4">Preferred Style</th>
+          <th rowspan="2">Sales Last Year</th>
+          <th rowspan="2">Sales YTD</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for artist in artists %}
+        <tr>
+          <td>{{ artist.firstname }} {{ artist.lastname }}</td>
+          <td>{{ artist.street }}</td>
+          <td>{{ artist.areacode }}-{{ artist.telephonenumber }}</td>
+          <td colspan="4">{{ artist.collectionartistid }}</td>
+          <td colspan="4">{{ artist.usualtype or artist.collectiontype }}</td>
+          <td colspan="4">{{ artist.usualmedium or artist.collectionmedium }}</td>
+          <td colspan="4">{{ artist.usualstyle or artist.collectionstyle }}</td>
+          <td>${{ '{:,.2f}'.format(artist.saleslastyear) if artist.saleslastyear else '0.00' }}</td>
+          <td>${{ '{:,.2f}'.format(artist.salesyeartodate) if artist.salesyeartodate else '0.00' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

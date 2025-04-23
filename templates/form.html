@@ -9,23 +9,13 @@
   <div class="form-selection-container">
     <h2>Fill Out a Form</h2>
 
-    <select id="form-select">
-      <option value="">-- Select a form --</option>
-      <option value="artist-form">Artist Information Form</option>
-      <option value="collector-form">Collector Information Form</option>
-      <option value="artwork-form">Artwork Information Form</option>
-      <option value="sale-invoice">Sale Invoice</option>
-      <option value="mailing-list-form">Mailing List Form</option>
-    </select>
-
-    <button id="select-form-btn" name="select">Select</button>
+    <div class="form-links">
+      <div><a href="/form/artist-form" class="form-link">Artist Information Form</a></div>
+      <div><a href="/form/collector-form" class="form-link">Collector Information Form</a></div>
+      <div><a href="/form/artwork-form" class="form-link">Artwork Information Form</a></div>
+      <div><a href="/form/sale-invoice" class="form-link">Sale Invoice</a></div>
+      <div><a href="/form/mailing-list-form" class="form-link">Mailing List Form</a></div>
+    </div>
   </div>
 </div>
-<script src="{{ url_for('static', path='js/form-select.js') }}?v=99"></script>
-{% endblock %}
-
-
-
-{% block script %}
-<script src="{{ url_for('static', path='js/form-select.js') }}?v=99"></script>
 {% endblock %}

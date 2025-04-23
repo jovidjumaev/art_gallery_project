@@ -17,14 +17,14 @@
   <nav class="navbar">
     <div class="nav-left">
       <span class="logo">MySite</span>
-      <a href="/" class="nav-link" data-url="/">Home</a>
-      <a href="/report" class="nav-link" data-url="/report">Report</a>
-      <a href="/form" class="nav-link" data-url="/form">Form</a>
-      <a href="/about" class="nav-link" data-url="/about">About</a>
+      <a href="#" class="nav-link" data-url="/">Home</a>
+      <a href="#report" class="nav-link" data-url="/report">Report</a>
+      <a href="#form" class="nav-link" data-url="/form">Form</a>
+      <a href="#about" class="nav-link" data-url="/about">About</a>
     </div>
     <div class="nav-right">
-      <a href="/login" class="nav-link" data-url="/login">Login</a>
-      <a href="/signup" class="nav-link" data-url="/signup">Sign Up</a>
+      <a href="#login" class="nav-link" data-url="/login">Login</a>
+      <a href="#signup" class="nav-link" data-url="/signup">Sign Up</a>
     </div>
   </nav>
 
@@ -36,5 +36,6 @@
   {% block script %}{% endblock %}
   <script src="{{ url_for('static', path='js/form-select.js') }}?v=99"></script>
   <script src="{{ url_for('static', path='js/script.js') }}"></script>
+  
 </body>
 </html>

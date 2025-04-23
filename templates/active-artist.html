@@ -1,0 +1,33 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<h1>All Artists</h1>
+<h1>Date of the Report: {{today}}</h1>
+<table border="1">
+    <tr>
+        <th>Artist</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>Type</th>
+        <th>Medium</th>
+        <th>Style</th>
+        <th>Sales Last Year</th>
+        <th>Sales YTD</th>
+
+        
+    </tr>
+    {% for artist in artists %}
+    <tr>
+        <td>{{ artist.firstname }} {{ artist.lastname }}</td>
+        <td>{{ artist.street }}</td>
+        <td>{{ artist.telephonenumber }}</td>
+        <td>{{ artist.usualtype }}</td>
+        <td>{{ artist.usualmedium }}</td>
+        <td>{{ artist.usualstyle }}</td>
+        <td>{{ artist.saleslastyear }}</td>
+        <td>{{ artist.salesyeartodate }}</td>
+        
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

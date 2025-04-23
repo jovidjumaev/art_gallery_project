@@ -1,11 +1,11 @@
 from sqlalchemy import Column, Integer, String, Date, Numeric, CHAR
 from database.database import Base
 
-class Artist(Base):
-    __tablename__ = 'ARTIST'  # Make sure this matches the exact name in Oracle
-    __table_args__ = {'schema': 'JJUMAEV'}  # Reference your partner's schema
+class Collector(Base):
+    __tablename__ = 'COLLECTOR' 
+    __table_args__ = {'schema': 'JJUMAEV'}  # Use your schema name
 
-    artistid = Column(Integer, primary_key=True, index=True)
+    socialsecuritynumber = Column(CHAR(9), primary_key=True, index=True)
     firstname = Column(String(15), nullable=False)
     lastname = Column(String(20), nullable=False)
     interviewdate = Column(Date, nullable=True)
@@ -16,9 +16,7 @@ class Artist(Base):
     zip = Column(CHAR(5), nullable=True)
     saleslastyear = Column(Numeric(8, 2), nullable=True)
     salesyeartodate = Column(Numeric(8, 2), nullable=True)
-    socialsecuritynumber = Column(CHAR(9), nullable=True)
-    usualmedium = Column(String(15), nullable=True)
-    usualstyle = Column(String(15), nullable=True)
-    usualtype = Column(String(20), nullable=True)
-
-
+    collectionartistid = Column(Integer, nullable=True)
+    collectionmedium = Column(String(15), nullable=True)
+    collectionstyle = Column(String(15), nullable=True)
+    collectiontype = Column(String(20), nullable=True)

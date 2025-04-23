@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<h1>Work for Sale Report</h1>
+<table border="1">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Artist ID</th>
+        <th>Date Listed</th>
+        <th>Type</th>
+        <th>Medium</th>
+        <th>Style</th>
+        <th>Year</th>
+        <th>Asking Price</th>
+        <th>Sale Price</th>
+        <th>Sale Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in results %}
+      <tr>
+        <td>{{ r.worktitle }}</td>
+        <td>{{ r.artistid }}</td>
+        <td>{{ r.datelisted }}</td>
+        <td>{{ r.worktype }}</td>
+        <td>{{ r.workmedium }}</td>
+        <td>{{ r.workstyle }}</td>
+        <td>{{ r.workyearcompleted }}</td>
+        <td>{{ r.askingprice }}</td>
+        <td>{{ r.saleprice }}</td>
+        <td>{{ r.saledate }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+{% endblock %}
