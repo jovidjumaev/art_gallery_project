@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<h1>Sale this week Report </h1>
+<table border="1">
+    <thead>
+      <tr>
+        <th>Salesperson</th>
+        <th>Artist </th>
+        <th>Title</th>
+        <th>Owner</th>
+        <th>Buyer</th>
+        <th>Sale Date</th>
+        <th>Selling Price</th>
+        <th>Commission</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sale in sales %}
+      <tr>
+        <td>{{ sale.salesperson_firstname }} {{ sale.salesperson_lastname }}</td>
+        <td>{{sale.artist_firstname}} {{sale.artist_lastname}}</td>
+        <td>{{ sale.work_title}}</td>
+        <td>{{sale.owner_firstname }} {{sale.owner_lastname }}</td>
+        <td>{{sale.buyer_firstname}} {{sale.buyer_lastname}}</td>
+        <td>{{sale.sale_date }}</td>
+        <td>{{ sale.selling_price }}</td>
+        <td>{{ sale.commission }}</td>
+      
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h3>Sales Summary for the Week</h3>
+  <p><strong>Total Sales:</strong> ${{ grand_total_sales }}</p>
+  <p><strong>Total Commission (5%):</strong> ${{ grand_total_commission }}</p>
+{% endblock %}

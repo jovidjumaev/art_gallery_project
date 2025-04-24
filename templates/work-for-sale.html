@@ -1,38 +1,38 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<h1>Work for Sale Report</h1>
+<h1>Work For Sale</h1>
 <table border="1">
     <thead>
       <tr>
         <th>Title</th>
-        <th>Artist ID</th>
-        <th>Date Listed</th>
+        <th>Artist </th>
         <th>Type</th>
         <th>Medium</th>
         <th>Style</th>
-        <th>Year</th>
+        <th>Owner's name</th>
         <th>Asking Price</th>
-        <th>Sale Price</th>
-        <th>Sale Date</th>
+        <th>Date's Shown</th>
+        <th>Date's List</th>
       </tr>
     </thead>
     <tbody>
       {% for r in results %}
       <tr>
         <td>{{ r.worktitle }}</td>
-        <td>{{ r.artistid }}</td>
-        <td>{{ r.datelisted }}</td>
+        <td>{{ r.artist_firstname}} {{r.artist_lastname}}</td>
         <td>{{ r.worktype }}</td>
         <td>{{ r.workmedium }}</td>
         <td>{{ r.workstyle }}</td>
-        <td>{{ r.workyearcompleted }}</td>
+        <td>{{ r.artist_firstname}} {{r.artist_lastname}}{{ r.owner_firstname}} {{r.owner_lastname}}</td>
         <td>{{ r.askingprice }}</td>
-        <td>{{ r.saleprice }}</td>
-        <td>{{ r.saledate }}</td>
+        <td>{{ r.dateshown }}</td>
+        <td>{{ r.datelisted }}</td>
+      
       </tr>
       {% endfor %}
     </tbody>
   </table>
+ 
   
 {% endblock %}
