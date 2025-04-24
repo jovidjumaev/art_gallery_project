@@ -37,7 +37,7 @@ def read_artists(request: Request):
 
     return templates.TemplateResponse("index.html", {"request": request})
 
-@app.get("/form")
+@app.get("artgalleryproject/form")
 def artist_form(request: Request): 
     return templates.TemplateResponse("form.html", {"request": request})
 
