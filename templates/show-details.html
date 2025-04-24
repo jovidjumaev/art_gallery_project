@@ -1,0 +1,26 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<h1>{{show_title}}</h1>
+
+<table border="1">
+    <tr>
+        <th>Title of Show</th>
+        <th>Opening Date</th>
+        <th>Closing Date</th>
+        <th>Feature Artist/th>
+        <th>Theme</th>
+    </tr>
+    {% for show in shows %}
+    <tr>
+        <td><a href="/report/show-artworks/{{ show.show_title | urlencode }}">
+            {{ show.show_title }}
+          </a></td>
+        <td>{{ show.opening_date }}</td>
+        <td>{{ show.closing_date }}</td>
+        <td>{{ show.featured_artist_firstname }} {{ show.featured_artist_lastname }}</td>
+        <td>{{ show.theme}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

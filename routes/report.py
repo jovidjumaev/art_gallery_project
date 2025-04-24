@@ -9,9 +9,13 @@ from models.collector import Collector
 from models.artwork import Artwork
 from models.sale import Sale
 from models.buyer import Buyer
+from models.artshow import ArtShow
+from models.shownin import ShownIn
 from models.salesperson import Salesperson
 from database.database import SessionLocal
 from decimal import Decimal
+from urllib.parse import unquote
+
 
 templates = Jinja2Templates(directory="templates")
 
@@ -312,4 +316,69 @@ def get_aged_artworks(request: Request, db: Session = Depends(get_db)):
         "aged_artworks": aged_artworks,
         "cutoff_date": six_months_ago,
         "todayDate": formatted_date
+    })
+
+@router.get("/show-details")
+def get_show_details(
+    request: Request,
+    db: Session = Depends(get_db)
+):
+    result_raw = (
+        db.query(
+            ArtShow.showtitle.label("show_title"),
+            ArtShow.showopeningdate.label("opening_date"),
+            ArtShow.showclosingdate.label("closing_date"),
+            Artist.firstname.label("featured_artist_firstname"),
+            Artist.lastname.label("featured_artist_lastname"),
+            ArtShow.showtheme.label("theme")
+        )
+        .join(Artist, ArtShow.showfeaturedartistid == Artist.artistid)
+        .all()
+    )
+
+    ShowDetails = namedtuple("ShowDetails", [
+        "show_title", "opening_date", "closing_date",
+        "featured_artist_firstname", "featured_artist_lastname", "theme"
+    ])
+
+    show_info = [ShowDetails(*row) for row in result_raw]
+
+    return templates.TemplateResponse("show-details.html", {
+        "request": request,
+        "shows": show_info
+    })
+
+@router.get("/show-artworks/{show_title}")
+def get_show_artworks(
+    request: Request,
+    show_title: str,
+    db: Session = Depends(get_db)
+):
+    # Decode and clean up the title
+    decoded_title = unquote(show_title).strip()
+
+    raw_results = (
+        db.query(
+            Artist.firstname.label("artist_firstname"),
+            Artist.lastname.label("artist_lastname"),
+            Artwork.worktitle.label("title"),
+            Artwork.askingprice,
+            Artwork.status
+        )
+        .join(Artwork, Artwork.artistid == Artist.artistid)
+        .join(ShownIn, ShownIn.artworkid == Artwork.artworkid)
+        .filter(ShownIn.showtitle.ilike(decoded_title))
+        .all()
+    )
+
+    ShowArtwork = namedtuple("ShowArtwork", [
+        "artist_firstname", "artist_lastname", "title", "askingprice", "status"
+    ])
+
+    artworks = [ShowArtwork(*row) for row in raw_results]
+
+    return templates.TemplateResponse("art-show-details.html", {
+        "request": request,
+        "artworks": artworks,
+        "show_title": decoded_title
     })
