@@ -41,12 +41,12 @@ def get_artists(request: Request):
 def read_artists(request: Request, db: Session = Depends(get_db)):
     artists = db.query(Artist).all()
     today = date.today()
-    return templates.TemplateResponse("active-artist.html", {"request": request, "artists": artists, "today":today})
+    return templates.TemplateResponse("/reports/active-artist.html", {"request": request, "artists": artists, "today":today})
 
 @router.get("/individual-collector-sale")
 def individual_collector(request: Request, db: Session = Depends(get_db)):
     collector = db.query(Collector).all()
-    return templates.TemplateResponse("individual-collector-sale.html", {"request": request, "artists": collector})
+    return templates.TemplateResponse("/reports/individual-collector-sale.html", {"request": request, "artists": collector})
 
 @router.get("/individual-artist-sale")
 def get_individual_sale(
@@ -125,7 +125,7 @@ def get_individual_sale(
     for_sale_artworks = [ForSaleArtwork(*row) for row in for_sale_works_raw]
     total_asking_price = sum(work.askingprice or 0 for work in for_sale_artworks)
 
-    return templates.TemplateResponse("individual-artist-sale.html", {
+    return templates.TemplateResponse("/reports/individual-artist-sale.html", {
         "request": request,
         "artist_id": artist_id,
         "sold_works": sold_artworks,
@@ -169,7 +169,7 @@ def work_for_sale(
 
     results = [WorkForSale(*row) for row in raw_results]
 
-    return templates.TemplateResponse("work-for-sale.html", {
+    return templates.TemplateResponse("/reports/work-for-sale.html", {
         "request": request,
         "results": results
     })
@@ -200,7 +200,7 @@ def get_collector_summary(request: Request, db: Session = Depends(get_db)):
 
     collectors = [CollectorSummary(*row) for row in raw_results]
 
-    return templates.TemplateResponse("collector-summary.html", {
+    return templates.TemplateResponse("/reports/collector-summary.html", {
         "request": request,
         "collectors": collectors
     })
@@ -264,7 +264,7 @@ def get_sale_this_week(request: Request, db: Session = Depends(get_db)):
     grand_total_sales = sum([r.saleprice for r in total_result if r.saleprice])
     grand_total_commission = grand_total_sales * Decimal("0.05")
 
-    return templates.TemplateResponse("sales-this-week.html", {
+    return templates.TemplateResponse("/reports/sales-this-week.html", {
         "request": request,
         "sales": sales,
         "start_date": start_of_week,
@@ -311,7 +311,7 @@ def get_aged_artworks(request: Request, db: Session = Depends(get_db)):
 
     aged_artworks = [AgedArtwork(*row) for row in raw_results]
 
-    return templates.TemplateResponse("aged-artworks.html", {
+    return templates.TemplateResponse("/reports/aged-artworks.html", {
         "request": request,
         "aged_artworks": aged_artworks,
         "cutoff_date": six_months_ago,
@@ -343,7 +343,7 @@ def get_show_details(
 
     show_info = [ShowDetails(*row) for row in result_raw]
 
-    return templates.TemplateResponse("show-details.html", {
+    return templates.TemplateResponse("/reports/show-details.html", {
         "request": request,
         "shows": show_info
     })
@@ -377,7 +377,7 @@ def get_show_artworks(
 
     artworks = [ShowArtwork(*row) for row in raw_results]
 
-    return templates.TemplateResponse("art-show-details.html", {
+    return templates.TemplateResponse("/reports/art-show-details.html", {
         "request": request,
         "artworks": artworks,
         "show_title": decoded_title
