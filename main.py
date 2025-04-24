@@ -32,7 +32,7 @@ def get_db():
         db.close()
 
 # Route to show artist data
-@app.get("/")
+@app.get("/artgalleryproject")
 def read_artists(request: Request):
 
     return templates.TemplateResponse("index.html", {"request": request})
