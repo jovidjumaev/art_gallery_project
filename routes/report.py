@@ -1,5 +1,5 @@
 from collections import namedtuple
-from fastapi import APIRouter, Query, Request, Depends
+from fastapi import APIRouter, Query, Request, Depends, Form
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from datetime import date, timedelta
@@ -37,103 +37,110 @@ def get_db():
 def get_artists(request: Request):
     return templates.TemplateResponse("report.html", {"request": request})
 
+#Active Artists Summary Report
 @router.get("/active-artists")
 def read_artists(request: Request, db: Session = Depends(get_db)):
     artists = db.query(Artist).all()
     today = date.today()
     return templates.TemplateResponse("/reports/active-artist.html", {"request": request, "artists": artists, "today":today})
 
+#F
 @router.get("/individual-collector-sale")
 def individual_collector(request: Request, db: Session = Depends(get_db)):
     collector = db.query(Collector).all()
-    return templates.TemplateResponse("/reports/individual-collector-sale.html", {"request": request, "artists": collector})
+    return templates.TemplateResponse("/reports/individual-collector-sale.html", {"request": request, "collectors": collector})
 
-@router.get("/individual-artist-sale")
-def get_individual_sale(
-    request: Request, 
-    db: Session = Depends(get_db),
-    artist_id: str = Query(..., description="Artist ID to filter")
-):
-    # === Works Sold ===
-    sold_artworks_raw = (
-        db.query(
-            Artwork.worktitle,
-            Artwork.datelisted,
-            Artwork.worktype,
-            Artwork.workmedium,
-            Artwork.workstyle,
-            Artwork.workyearcompleted,
-            Artwork.askingprice,
-            Sale.saleprice,
-            Sale.saledate
-        )
-        .join(Sale, Artwork.artworkid == Sale.artworkid)
-        .filter(Artwork.artistid == artist_id)
-        .all()
-    )
+@router.get('/individual-artist')
+def individual_artist(request: Request, db: Session = Depends(get_db)): 
+    artist = db.query(Artist).all()
+    return templates.TemplateResponse("/artist-report-form.html", {"request": request, "artists": artist})
 
-    SoldArtwork = namedtuple("SoldArtwork", [
-        "worktitle", "datelisted", "worktype", "workmedium",
-        "workstyle", "workyearcompleted", "askingprice", "saleprice", "saledate"
-    ])
-    sold_artworks = [SoldArtwork(*row) for row in sold_artworks_raw]
-    total_sales = sum(work.saleprice or 0 for work in sold_artworks)
+# @router.post("/individual-artist-sale")
+# def get_individual_sale(
+#     request: Request, 
+#     db: Session = Depends(get_db),
+#     artist_id: str = Query(..., description="Artist ID to filter")
+# ):
+#     # === Works Sold ===
+#     sold_artworks_raw = (
+#         db.query(
+#             Artwork.worktitle,
+#             Artwork.datelisted,
+#             Artwork.worktype,
+#             Artwork.workmedium,
+#             Artwork.workstyle,
+#             Artwork.workyearcompleted,
+#             Artwork.askingprice,
+#             Sale.saleprice,
+#             Sale.saledate
+#         )
+#         .join(Sale, Artwork.artworkid == Sale.artworkid)
+#         .filter(Artwork.artistid == artist_id)
+#         .all()
+#     )
 
-    # === Works Returned (status = 'sold') ===
-    returned_works_raw = (
-        db.query(
-            Artwork.worktitle,
-            Artwork.datelisted,
-            Artwork.worktype,
-            Artwork.workmedium,
-            Artwork.workstyle,
-            Artwork.workyearcompleted,
-            Artwork.askingprice, 
-            Artwork.datereturned,
-        )
-        .filter(Artwork.artistid == artist_id)
-        .filter(Artwork.status == "returned")
-        .all()
-    )
+#     SoldArtwork = namedtuple("SoldArtwork", [
+#         "worktitle", "datelisted", "worktype", "workmedium",
+#         "workstyle", "workyearcompleted", "askingprice", "saleprice", "saledate"
+#     ])
+#     sold_artworks = [SoldArtwork(*row) for row in sold_artworks_raw]
+#     total_sales = sum(work.saleprice or 0 for work in sold_artworks)
 
-    ReturnedWork = namedtuple("ReturnedWork", [
-        "worktitle", "datelisted", "worktype", "workmedium",
-        "workstyle", "workyearcompleted", "askingprice", "datereturned"
-    ])
-    returned_artworks = [ReturnedWork(*row) for row in returned_works_raw]
+#     # === Works Returned (status = 'sold') ===
+#     returned_works_raw = (
+#         db.query(
+#             Artwork.worktitle,
+#             Artwork.datelisted,
+#             Artwork.worktype,
+#             Artwork.workmedium,
+#             Artwork.workstyle,
+#             Artwork.workyearcompleted,
+#             Artwork.askingprice, 
+#             Artwork.datereturned,
+#         )
+#         .filter(Artwork.artistid == artist_id)
+#         .filter(Artwork.status == "returned")
+#         .all()
+#     )
 
-    # === Works For Sale ===
-    for_sale_works_raw = (
-        db.query(
-            Artwork.worktitle,
-            Artwork.datelisted,
-            Artwork.worktype,
-            Artwork.workmedium,
-            Artwork.workstyle,
-            Artwork.workyearcompleted,
-            Artwork.askingprice
-        )
-        .filter(Artwork.artistid == artist_id)
-        .filter(Artwork.status == "for sale")
-        .all()
-    )
+#     ReturnedWork = namedtuple("ReturnedWork", [
+#         "worktitle", "datelisted", "worktype", "workmedium",
+#         "workstyle", "workyearcompleted", "askingprice", "datereturned"
+#     ])
+#     returned_artworks = [ReturnedWork(*row) for row in returned_works_raw]
 
-    ForSaleArtwork = namedtuple("ForSaleArtwork", [
-        "worktitle", "datelisted", "worktype", "workmedium",
-        "workstyle", "workyearcompleted", "askingprice"
-    ])
-    for_sale_artworks = [ForSaleArtwork(*row) for row in for_sale_works_raw]
-    total_asking_price = sum(work.askingprice or 0 for work in for_sale_artworks)
+#     # === Works For Sale ===
+#     for_sale_works_raw = (
+#         db.query(
+#             Artwork.worktitle,
+#             Artwork.datelisted,
+#             Artwork.worktype,
+#             Artwork.workmedium,
+#             Artwork.workstyle,
+#             Artwork.workyearcompleted,
+#             Artwork.askingprice
+#         )
+#         .filter(Artwork.artistid == artist_id)
+#         .filter(Artwork.status == "for sale")
+#         .all()
+#     )
 
-    return templates.TemplateResponse("/reports/individual-artist-sale.html", {
-        "request": request,
-        "artist_id": artist_id,
-        "sold_works": sold_artworks,
-        "total_sales": total_sales,
-        "returned_works": returned_artworks,
-        "forSale_works": for_sale_artworks,
-        "total_asking_price": total_asking_price
-    })
+#     ForSaleArtwork = namedtuple("ForSaleArtwork", [
+#         "worktitle", "datelisted", "worktype", "workmedium",
+#         "workstyle", "workyearcompleted", "askingprice"
+#     ])
+#     for_sale_artworks = [ForSaleArtwork(*row) for row in for_sale_works_raw]
+#     total_asking_price = sum(work.askingprice or 0 for work in for_sale_artworks)
+
+#     return templates.TemplateResponse("/artist-report.html", {
+#         "request": request,
+#         "artist_id": artist_id,
+#         "sold_works": sold_artworks,
+#         "total_sales": total_sales,
+#         "returned_works": returned_artworks,
+#         "forSale_works": for_sale_artworks,
+#         "total_asking_price": total_asking_price
+#     })
 
 
 @router.get('/work-for-sale')
@@ -156,7 +163,7 @@ def work_for_sale(
             Artwork.datelisted
         )
         .join(Artist, Artwork.artistid == Artist.artistid)
-        .join(Collector, Artwork.collectorsocialsecuritynumber == Collector.socialsecuritynumber)
+        .outerjoin(Collector, Artwork.collectorsocialsecuritynumber == Collector.socialsecuritynumber)  # <<< OUTER JOIN
         .filter(Artwork.status == 'for sale')
         .all()
     )
@@ -174,6 +181,8 @@ def work_for_sale(
         "results": results
     })
 
+
+#Collectors Summary Report
 @router.get("/collector-summary")
 def get_collector_summary(request: Request, db: Session = Depends(get_db)):
     raw_results = (
@@ -381,4 +390,140 @@ def get_show_artworks(
         "request": request,
         "artworks": artworks,
         "show_title": decoded_title
+    })
+
+
+@router.get("/artist-report-form")
+def artist_report_form(request: Request, db: Session = Depends(get_db)):
+    artists = db.query(Artist).all()
+    today = date.today()
+    end_of_year = date(today.year, 12, 31)
+
+    return templates.TemplateResponse("artist-report-form.html", {
+        "request": request,
+        "artists": artists,
+        "today": today,
+        "end_of_year": end_of_year
+    })
+
+@router.post("/indivudal-artists-sale")
+def generate_artist_report(
+    request: Request,
+    db: Session = Depends(get_db),
+    start_date: date = Form(...),
+    end_date: date = Form(...),
+    artist_id: int = Form(...)
+):
+    # Get artist info
+    artist = db.query(Artist).filter(Artist.artistid == artist_id).first()
+
+    # Get artworks listed during that time
+    artworks = (
+        db.query(Artwork)
+        .filter(
+            Artwork.artistid == artist_id,
+            Artwork.datelisted >= start_date,
+            Artwork.datelisted <= end_date
+        )
+        .all()
+    )
+
+    return templates.TemplateResponse("artist-report.html", {
+        "request": request,
+        "artist": artist,
+        "artworks": artworks,
+        "start_date": start_date,
+        "end_date": end_date
+    })
+
+
+@router.post("/individual-artist-sale")
+def get_individual_sale(
+    request: Request,
+    db: Session = Depends(get_db),
+    artist_id: str = Form(...),   # 🔥 Change from Query to Form
+    start_date: str = Form(...),   # 🔥 Accept start_date (you had it in your form)
+    end_date: str = Form(...)      # 🔥 Accept end_date (hidden input in your form)
+):
+    # === Works Sold ===
+    sold_artworks_raw = (
+        db.query(
+            Artwork.worktitle,
+            Artwork.datelisted,
+            Artwork.worktype,
+            Artwork.workmedium,
+            Artwork.workstyle,
+            Artwork.workyearcompleted,
+            Artwork.askingprice,
+            Sale.saleprice,
+            Sale.saledate
+        )
+        .join(Sale, Artwork.artworkid == Sale.artworkid)
+        .filter(Artwork.artistid == artist_id)
+        .filter(Sale.saledate >= start_date)   # 🔥 filter by date range
+        .filter(Sale.saledate <= end_date)
+        .all()
+    )
+
+    SoldArtwork = namedtuple("SoldArtwork", [
+        "worktitle", "datelisted", "worktype", "workmedium",
+        "workstyle", "workyearcompleted", "askingprice", "saleprice", "saledate"
+    ])
+    sold_artworks = [SoldArtwork(*row) for row in sold_artworks_raw]
+    total_sales = sum(work.saleprice or 0 for work in sold_artworks)
+
+    # === Works Returned ===
+    returned_works_raw = (
+        db.query(
+            Artwork.worktitle,
+            Artwork.datelisted,
+            Artwork.worktype,
+            Artwork.workmedium,
+            Artwork.workstyle,
+            Artwork.workyearcompleted,
+            Artwork.askingprice,
+            Artwork.datereturned,
+        )
+        .filter(Artwork.artistid == artist_id)
+        .filter(Artwork.status == "returned")
+        .all()
+    )
+
+    ReturnedWork = namedtuple("ReturnedWork", [
+        "worktitle", "datelisted", "worktype", "workmedium",
+        "workstyle", "workyearcompleted", "askingprice", "datereturned"
+    ])
+    returned_artworks = [ReturnedWork(*row) for row in returned_works_raw]
+
+    # === Works For Sale ===
+    for_sale_works_raw = (
+        db.query(
+            Artwork.worktitle,
+            Artwork.datelisted,
+            Artwork.worktype,
+            Artwork.workmedium,
+            Artwork.workstyle,
+            Artwork.workyearcompleted,
+            Artwork.askingprice
+        )
+        .filter(Artwork.artistid == artist_id)
+        .filter(Artwork.status == "for sale")
+        .all()
+    )
+
+    ForSaleArtwork = namedtuple("ForSaleArtwork", [
+        "worktitle", "datelisted", "worktype", "workmedium",
+        "workstyle", "workyearcompleted", "askingprice"
+    ])
+    for_sale_artworks = [ForSaleArtwork(*row) for row in for_sale_works_raw]
+    total_asking_price = sum(work.askingprice or 0 for work in for_sale_artworks)
+
+    return templates.TemplateResponse("/artist-report.html", {
+        "request": request,
+        "artist_id": artist_id,
+        "sold_works": sold_artworks,
+        "total_sales": total_sales,
+        "returned_works": returned_artworks,
+        "forSale_works": for_sale_artworks,
+        "total_asking_price": total_asking_price
     })

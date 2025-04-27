@@ -1,8 +1,6 @@
 {% extends 'index.html' %}
 
-{% block style %}
-<link rel="stylesheet" href="{{ url_for('static', path='css/form-style.css') }}">
-{% endblock %}
+
 
 {% block content %}
 <div class="form-selection-wrapper">
@@ -10,11 +8,11 @@
     <h2>Fill Out a Form</h2>
 
     <div class="form-links">
-      <div><a href="/form/artist-form" class="form-link">Artist Information Form</a></div>
-      <div><a href="/form/collector-form" class="form-link">Collector Information Form</a></div>
-      <div><a href="/form/artwork-form" class="form-link">Artwork Information Form</a></div>
-      <div><a href="/form/sale-invoice" class="form-link">Sale Invoice</a></div>
-      <div><a href="/form/mailing-list-form" class="form-link">Mailing List Form</a></div>
+      <div><a href="/artgalleryproject/form/add-artist" class="form-link">Artist Information Form</a></div>
+      <div><a href="/artgalleryproject/form/collector-form" class="form-link">Collector Information Form</a></div>
+      <div><a href="/artgalleryproject/form/artwork-form" class="form-link">Artwork Information Form</a></div>
+      <div><a href="/artgalleryproject/form/sale-invoice" class="form-link">Sale Invoice</a></div>
+      <div><a href="/artgalleryproject/form/mailing-list-form" class="form-link">Mailing List Form</a></div>
     </div>
   </div>
 </div>

@@ -1,11 +1,12 @@
-from sqlalchemy import Column, Integer, String, Date, Numeric, CHAR
+from sqlalchemy import Column, Integer, String, Date, Numeric, CHAR,  Sequence
 from database.database import Base
 
+artist_id_seq = Sequence('ARTISTID_SEQUENCE', schema='JJUMAEV')
 class Artist(Base):
     __tablename__ = 'ARTIST'  # Make sure this matches the exact name in Oracle
     __table_args__ = {'schema': 'JJUMAEV'}  # Reference your partner's schema
 
-    artistid = Column(Integer, primary_key=True, index=True)
+    artistid = Column(Integer, artist_id_seq, primary_key=True, server_default=artist_id_seq.next_value())
     firstname = Column(String(15), nullable=False)
     lastname = Column(String(20), nullable=False)
     interviewdate = Column(Date, nullable=True)

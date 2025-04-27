@@ -11,7 +11,10 @@ from models.collector import Collector
 from models.artwork import Artwork
 from models.sale import Sale
 from database.database import SessionLocal
+
 from routes.report import router as report_router
+from routes.form import router as form_router
+
 
 # Sub-application
 gallery_app = FastAPI()
@@ -20,30 +23,20 @@ gallery_app = FastAPI()
 gallery_app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# DB Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-# Routes under /artgalleryproject
 @gallery_app.get("/", response_class=HTMLResponse)
 def read_artists(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-@gallery_app.get("/form", response_class=HTMLResponse)
-def artist_form(request: Request): 
-    return templates.TemplateResponse("form.html", {"request": request})
 
-@gallery_app.get("/form/artist-form", response_class=HTMLResponse)
-async def get_artist_form(request: Request):
-    return templates.TemplateResponse("form/artist-info-form.html", {"request": request})
 
 # Include additional routers
 gallery_app.include_router(report_router)
+gallery_app.include_router(form_router)
+
 
 # Main application
 app = FastAPI()
 app.mount("/artgalleryproject", gallery_app)
+
+
+

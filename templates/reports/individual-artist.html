@@ -1,0 +1,22 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<h1>Please pick an artist</h1>
+<table border="1">
+    <tr>
+        <th>Artist</th>
+        <th>Title</th>
+        <th>Asking Price</th>
+        <th>Status</th>
+     
+    </tr>
+    {% for artwork in artworks %}
+    <tr>
+        <td>{{  artwork.artist_firstname }} {{  artwork.artist_lastname }}</td>
+        <td>{{  artwork.title }}</td>
+        <td>{{  artwork.askingprice }}</td>
+        <td>{{ artwork.status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

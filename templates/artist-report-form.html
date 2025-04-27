@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+{% block content %}
+  <h2>Artist Report Filter</h2>
+  <form method="post" action="/artgalleryproject/report/individual-artist-sale">
+    <label for="artist_id">Select Artist:</label>
+    <select name="artist_id" id="artist_id" required>
+      <option value="">-- Choose an Artist --</option>
+      {% for artist in artists %}
+        <option value="{{ artist.artistid }}">{{ artist.firstname }} {{ artist.lastname }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="start_date">Start Date:</label>
+    <input type="date" name="start_date" value="{{ today }}" required>
+
+    <input type="hidden" name="end_date" value="{{ end_of_year }}">
+
+
+    <button type="submit">Generate Report</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+{{success}}
+{{error}}
+<form method="POST" action="/artgalleryproject/form/add-mailing-list" novalidate>
+    <!-- Date Information -->
+    <div>
+        <h5>📅 Date</h5>
+        <div>
+            <label>Today's Date</label>
+            <input type="date" name="signupDate" required>
+        </div>
+    </div>
+
+    <!-- Contact Information -->
+    <div>
+        <h5>👤 Contact Information</h5>
+
+        <div>
+            <label>Last Name</label>
+            <input type="text" name="lastName" required
+                   pattern="[A-Za-z]{1,15}" maxlength="15"
+                   title="Please enter up to 15 letters only">
+        </div>
+
+        <div>
+            <label>First Name</label>
+            <input type="text" name="firstName" required
+                   pattern="[A-Za-z]{1,15}" maxlength="15"
+                   title="Please enter up to 15 letters only">
+        </div>
+
+        <div>
+            <label>Street</label>
+            <input type="text" name="street" required>
+        </div>
+
+        <div>
+            <label>City</label>
+            <input type="text" name="city" required>
+        </div>
+
+        <div>
+            <label>State</label>
+            <input type="text" name="state" required
+                   pattern="[A-Z]{2}" maxlength="2"
+                   style="text-transform: uppercase;"
+                   oninput="this.value = this.value.toUpperCase()"
+                   title="Please enter a 2-letter state code in capitals (e.g., SC)">
+        </div>
+
+        <div>
+            <label>ZIP</label>
+            <input type="text" name="zip" required
+                   pattern="[0-9]{5}" maxlength="5"
+                   title="Please enter exactly 5 digits">
+        </div>
+
+        <div>
+            <label>Area Code</label>
+            <input type="text" name="areaCode" required
+                   pattern="[0-9]{3}" maxlength="3"
+                   title="Please enter exactly 3 digits">
+        </div>
+
+        <div>
+            <label>Telephone Number</label>
+            <input type="text" name="telephoneNumber" required
+                   pattern="[0-9]{7}" maxlength="7"
+                   title="Please enter exactly 7 digits">
+        </div>
+    </div>
+
+    <!-- Art Preferences -->
+    <div>
+        <h5>❤️ Art Preferences</h5>
+        <p>All fields below are optional.</p>
+
+        <div>
+            <label>Preferred Artist First Name</label>
+            <input type="text" name="preferredArtistFirstName"
+                   pattern="[A-Za-z]{0,15}" maxlength="15"
+                   placeholder="Enter artist's first name (optional)">
+        </div>
+
+        <div>
+            <label>Preferred Artist Last Name</label>
+            <input type="text" name="preferredArtistLastName"
+                   pattern="[A-Za-z]{0,15}" maxlength="15"
+                   placeholder="Enter artist's last name (optional)">
+        </div>
+
+        <div>
+            <label>Preferred Type</label>
+            <select name="preferredType" id="preferredType">
+                <option value="">Select Type (Optional)</option>
+                <option value="Painting">Painting</option>
+                <option value="Sculpture">Sculpture</option>
+                <option value="Photography">Photography</option>
+                <option value="Digital Art">Digital Art</option>
+                <option value="Mixed Media">Mixed Media</option>
+                <option value="other">Other</option>
+            </select>
+            <input type="text" id="otherType" name="otherType" placeholder="Please specify type" style="display:none;">
+        </div>
+
+        <div>
+            <label>Preferred Medium</label>
+            <select name="preferredMedium" id="preferredMedium">
+                <option value="">Select Medium (Optional)</option>
+                <option value="Oil">Oil</option>
+                <option value="Acrylic">Acrylic</option>
+                <option value="Watercolor">Watercolor</option>
+                <option value="Bronze">Bronze</option>
+                <option value="Marble">Marble</option>
+                <option value="other">Other</option>
+            </select>
+            <input type="text" id="otherMedium" name="otherMedium" placeholder="Please specify medium" style="display:none;">
+        </div>
+
+        <div>
+            <label>Preferred Style</label>
+            <select name="preferredStyle" id="preferredStyle">
+                <option value="">Select Style (Optional)</option>
+                <option value="Abstract">Abstract</option>
+                <option value="Realism">Realism</option>
+                <option value="Impressionism">Impressionism</option>
+                <option value="Modern">Modern</option>
+                <option value="Contemporary">Contemporary</option>
+                <option value="Folk">Folk</option>
+                <option value="other">Other</option>
+            </select>
+            <input type="text" id="otherStyle" name="otherStyle" placeholder="Please specify style" style="display:none;">
+        </div>
+    </div>
+
+    <div>
+        <a href="/">Cancel</a>
+        <button type="submit">Join Mailing List</button>
+    </div>
+
+</form>
+
+{% endblock %}

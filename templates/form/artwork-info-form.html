@@ -1,0 +1,125 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<form method="POST" action="/artgalleryproject/form/add-artwork" class="form-container" novalidate>
+    {{error}}
+    {{success}}
+    <!-- Artwork Details -->
+    <div class="form-section">
+        <h3>Artwork Information</h3>
+        <p>Please fill out the basic information about the artwork for its description card.</p>
+
+        <label>Artist Last Name *</label>
+        <input type="text" name="artistLastName" maxlength="15" required>
+
+        <label>Artist First Name *</label>
+        <input type="text" name="artistFirstName" maxlength="15" required>
+
+        <label>Title *</label>
+        <input type="text" name="title" maxlength="50" required>
+
+        <label>Year Completed *</label>
+        <input type="number" name="yearCompleted" min="1500" max="2025" required>
+
+        <label>Size *</label>
+        <input type="text" name="size" placeholder="e.g., 24x36 inches" required>
+
+        <label>Type *</label>
+        <select name="usualType" required>
+            <option value="" selected disabled>Select Type</option>
+            <option value="Painting">Painting</option>
+            <option value="Sculpture">Sculpture</option>
+            <option value="Photography">Photography</option>
+            <option value="Digital Art">Digital Art</option>
+            <option value="Mixed Media">Mixed Media</option>
+            <option value="other">Other</option>
+        </select>
+        <input type="text" id="otherType" name="otherType" placeholder="Specify Type (if Other)" class="hidden">
+
+        <label>Medium *</label>
+        <select name="usualMedium" required>
+            <option value="" selected disabled>Select Medium</option>
+            <option value="Oil">Oil</option>
+            <option value="Acrylic">Acrylic</option>
+            <option value="Watercolor">Watercolor</option>
+            <option value="Bronze">Bronze</option>
+            <option value="Marble">Marble</option>
+            <option value="other">Other</option>
+        </select>
+        <input type="text" id="otherMedium" name="otherMedium" placeholder="Specify Medium (if Other)" class="hidden">
+
+        <label>Style *</label>
+        <select name="usualStyle" required>
+            <option value="" selected disabled>Select Style</option>
+            <option value="Abstract">Abstract</option>
+            <option value="Realism">Realism</option>
+            <option value="Impressionism">Impressionism</option>
+            <option value="Modern">Modern</option>
+            <option value="Contemporary">Contemporary</option>
+            <option value="other">Other</option>
+        </select>
+        <input type="text" id="otherStyle" name="otherStyle" placeholder="Specify Style (if Other)" class="hidden">
+    </div>
+
+    <!-- Owner Information -->
+    <div class="form-section">
+        <h3>Owner Information</h3>
+        <p>If owned by someone other than the artist, please complete this section with the owner's information.</p>
+
+        <label>Owner Social Security Number (9 digits)</label>
+        <input type="text" name="ownerSSN" maxlength="9">
+
+        <label>Owner Last Name</label>
+        <input type="text" name="ownerLastName" maxlength="15">
+
+        <label>Owner First Name</label>
+        <input type="text" name="ownerFirstName" maxlength="15">
+
+        <label>Street</label>
+        <input type="text" name="ownerStreet" maxlength="30">
+
+        <label>City</label>
+        <input type="text" name="ownerCity">
+
+        <label>State (2 capital letters)</label>
+        <input type="text" name="ownerState" maxlength="2">
+
+        <label>ZIP (5 digits)</label>
+        <input type="text" name="ownerZip" maxlength="5">
+
+        <label>Area Code (3 digits)</label>
+        <input type="text" name="ownerAreaCode" maxlength="3">
+
+        <label>Phone Number (7 digits)</label>
+        <input type="text" name="ownerPhoneNumber" maxlength="7">
+    </div>
+
+    <!-- Gallery Information -->
+    <div class="form-section">
+        <h3>Gallery Information</h3>
+        <p>If the piece is chosen to be offered for sale by the gallery, please complete this section.</p>
+
+        <label>Date Listed *</label>
+        <input type="date" name="dateListed" required>
+
+        <label>Asking Price (USD) *</label>
+        <input type="number" name="askingPrice" min="0" step="0.01" required>
+
+        <label>Status *</label>
+        <select name="status" required>
+            <option value="" disabled>Select Status</option>
+            <option value="for sale" selected>For Sale</option>
+            <option value="sold">Sold</option>
+            <option value="returned">Returned</option>
+        </select>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn-submit">Submit Artwork</button>
+        <a href="/" class="btn-cancel">Cancel</a>
+    </div>
+</form>
+
+
+{% endblock %}
+ 

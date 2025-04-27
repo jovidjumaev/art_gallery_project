@@ -1,11 +1,16 @@
-from sqlalchemy import Column, Integer, String, Date, Numeric, CHAR, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, Numeric, CHAR, ForeignKey, Sequence
 from database.database import Base
 
 class Artwork(Base):
-    __tablename__ = 'ARTWORK' 
-    __table_args__ = {'schema': 'JJUMAEV'}  
+    __tablename__ = 'ARTWORK'
+    __table_args__ = {'schema': 'JJUMAEV'}
 
-    artworkid = Column(Integer, primary_key=True, index=True)
+    artworkid = Column(
+        Integer,
+        Sequence('ARTWORKID_SEQUENCE', schema='JJUMAEV'),
+        primary_key=True,
+        index=True
+    )
     artistid = Column(Integer, ForeignKey('JJUMAEV.ARTIST.artistid'), nullable=False)
     worktitle = Column(String(50), nullable=False)
     askingprice = Column(Numeric(8, 2), nullable=True)

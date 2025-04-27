@@ -1,0 +1,176 @@
+
+{% extends 'index.html' %}
+
+{% block content %}
+<form method="POST" class="form-container" novalidate action='/artgalleryproject/form/add-collector'>
+{{success}}
+{{error}}
+    <!-- Interview Information -->
+    <div class="form-section">
+      <h3>Interview Details</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Date of Interview</label>
+          <input type="date" name="interviewDate" value="{{ request.form.interviewDate }}" required>
+        </div>
+        <div class="form-group">
+          <label>Name of Interviewer</label>
+          <input type="text" name="interviewerName"
+                 value="{{ request.form.interviewerName }}"
+                 maxlength="30"
+                 pattern="[a-zA-Z\s-']*"
+                 onkeypress="return /[a-zA-Z\s-']/.test(event.key)"
+                 required>
+          <small>Maximum 30 characters, letters only</small>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Collector Personal Information -->
+    <div class="form-section">
+      <h3>Personal Information</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" name="lastName"
+                 value="{{ request.form.lastName }}"
+                 maxlength="15"
+                 pattern="[a-zA-Z\s-']*"
+                 onkeypress="return /[a-zA-Z\s-']/.test(event.key)"
+                 required>
+        </div>
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" name="firstName"
+                 value="{{ request.form.firstName }}"
+                 maxlength="15"
+                 pattern="[a-zA-Z\s-']*"
+                 onkeypress="return /[a-zA-Z\s-']/.test(event.key)"
+                 required>
+        </div>
+        <div class="form-group">
+          <label>Street</label>
+          <input type="text" name="street" value="{{ request.form.street }}" required>
+        </div>
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" name="city" value="{{ request.form.city }}" required>
+        </div>
+        <div class="form-group">
+          <label>State</label>
+          <input type="text" name="state"
+                 value="{{ request.form.state }}"
+                 maxlength="2"
+                 pattern="[A-Z]{2}"
+                 oninput="this.value = this.value.toUpperCase()"
+                 required>
+          <small>Use 2 capital letters (e.g., SC)</small>
+        </div>
+        <div class="form-group">
+          <label>ZIP</label>
+          <input type="text" name="zip"
+                 value="{{ request.form.zip }}"
+                 maxlength="5"
+                 pattern="[0-9]{5}"
+                 required>
+          <small>5 digits only</small>
+        </div>
+        <div class="form-group">
+          <label>Area Code</label>
+          <input type="text" name="areaCode"
+                 value="{{ request.form.areaCode }}"
+                 maxlength="3"
+                 pattern="[0-9]{3}"
+                 required>
+        </div>
+        <div class="form-group">
+          <label>Telephone Number</label>
+          <input type="text" name="telephoneNumber"
+                 value="{{ request.form.telephoneNumber }}"
+                 maxlength="7"
+                 pattern="[0-9]{7}"
+                 required>
+        </div>
+        <div class="form-group">
+          <label>Social Security Number</label>
+          <input type="text" name="socialSecurityNumber"
+                 value="{{ request.form.socialSecurityNumber }}"
+                 maxlength="9"
+                 pattern="[0-9]{9}"
+                 required>
+          <small>9 digits only</small>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Collection Information -->
+    <div class="form-section">
+      <h3>Collection Details</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Artist Last Name</label>
+          <input type="text" name="collectionArtistLastName"
+                 value="{{ request.form.collectionArtistLastName }}"
+                 maxlength="15"
+                 pattern="[a-zA-Z\s-']*">
+        </div>
+        <div class="form-group">
+          <label>Artist First Name</label>
+          <input type="text" name="collectionArtistFirstName"
+                 value="{{ request.form.collectionArtistFirstName }}"
+                 maxlength="15"
+                 pattern="[a-zA-Z\s-']*">
+        </div>
+        <div class="form-group">
+          <label>Collection Type</label>
+          <select name="collectionType" id="collectionType">
+            <option value="" selected disabled>Select Type</option>
+            <option value="Painting">Painting</option>
+            <option value="Sculpture">Sculpture</option>
+            <option value="Photography">Photography</option>
+            <option value="Digital Art">Digital Art</option>
+            <option value="Mixed Media">Mixed Media</option>
+            <option value="other">Other</option>
+          </select>
+          <input type="text" id="otherTypeInput" name="otherTypeInput" class="hidden" placeholder="Specify other type">
+        </div>
+        <div class="form-group">
+          <label>Collection Medium</label>
+          <select name="collectionMedium" id="collectionMedium">
+            <option value="" selected disabled>Select Medium</option>
+            <option value="Oil">Oil</option>
+            <option value="Acrylic">Acrylic</option>
+            <option value="Watercolor">Watercolor</option>
+            <option value="Bronze">Bronze</option>
+            <option value="Marble">Marble</option>
+            <option value="other">Other</option>
+          </select>
+          <input type="text" id="otherMediumInput" name="otherMediumInput" class="hidden" placeholder="Specify other medium">
+        </div>
+        <div class="form-group">
+          <label>Collection Style</label>
+          <select name="collectionStyle" id="collectionStyle">
+            <option value="" selected disabled>Select Style</option>
+            <option value="Abstract">Abstract</option>
+            <option value="Realism">Realism</option>
+            <option value="Impressionism">Impressionism</option>
+            <option value="Modern">Modern</option>
+            <option value="Contemporary">Contemporary</option>
+            <option value="other">Other</option>
+          </select>
+          <input type="text" id="otherStyleInput" name="otherStyleInput" class="hidden" placeholder="Specify other style">
+        </div>
+      </div>
+    </div>
+  
+    <!-- Submit Buttons -->
+    <div class="form-actions">
+      <a href="/" class="button cancel">Cancel</a>
+      <button type="submit" class="button submit">Submit</button>
+    </div>
+  
+  </form>
+  
+
+  {% endblock %}
+ 

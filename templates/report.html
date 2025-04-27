@@ -1,34 +1,22 @@
-
-
 {% extends 'index.html' %}
-
-{% block style %}
-<link rel="stylesheet" href="{{ url_for('static', path='css/report-style.css') }}">
-{% endblock %}
 
 {% block content %}
 <div class="report-selection-wrapper">
   <div class="report-selection-container">
     <h2>Select Report</h2>
 
-    <div class="report-list">
-      <ul>
-        <li><a href="/artgalleryproject/report/active-artists">Active Artists Summary Report</a></li>
-        <li><a href="/artgalleryproject/report/individual-collector-sale">Individual Artist Sales Report</a></li>
-        <li><a href="/artgalleryproject/report/collector-summary">Collectors Summary Report</a></li>
-        <li><a href="/artgalleryproject/report/individual-collector">Individual Collector Sales Report</a></li>
-        <li><a href="/artgalleryproject/report/work-for-sale">Works for Sale Report</a></li>
-        <li><a href="/artgalleryproject/report/sales-this-week">Sales This Week Report</a></li>
-        <li><a href="/artgalleryproject/report/aged-artworks">Aged Artworks Report</a></li>
-        <li><a href="/artgalleryproject/report/show-details">Art Show Details</a></li>
-      </ul>
+    <div class="report-links">
+      <div><a href="/artgalleryproject/report/active-artists" class="report-link">Active Artists Summary Report</a></div>
+      <div><a href="/artgalleryproject/report/individual-artist" class="report-link">Individual Artist Sales Report</a></div>
+      <div><a href="/artgalleryproject/report/collector-summary" class="report-link">Collectors Summary Report</a></div>
+      <div><a href="/artgalleryproject/report/individual-collector-sale" class="report-link">Individual Collector Sales Report</a></div>
+      <div><a href="/artgalleryproject/report/work-for-sale" class="report-link">Works for Sale Report</a></div>
+      <div><a href="/artgalleryproject/report/sales-this-week" class="report-link">Sales This Week Report</a></div>
+      <div><a href="/artgalleryproject/report/aged-artworks" class="report-link">Aged Artworks Report</a></div>
+      <div><a href="/artgalleryproject/report/show-details" class="report-link">Art Show Details</a></div>
     </div>
-    
-
-    <button id="select-report-btn" name="select">Select</button>
   </div>
 </div>
-
 
 <script src="{{ url_for('static', path='js/report-select.js') }}"></script>
 {% endblock %}

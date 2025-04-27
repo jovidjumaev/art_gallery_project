@@ -20,17 +20,17 @@
         </tr>
       </thead>
       <tbody>
-        {% for artist in artists %}
+        {% for collector in collectors %}
         <tr>
-          <td>{{ artist.firstname }} {{ artist.lastname }}</td>
-          <td>{{ artist.street }}</td>
-          <td>{{ artist.areacode }}-{{ artist.telephonenumber }}</td>
-          <td colspan="4">{{ artist.collectionartistid }}</td>
-          <td colspan="4">{{ artist.usualtype or artist.collectiontype }}</td>
-          <td colspan="4">{{ artist.usualmedium or artist.collectionmedium }}</td>
-          <td colspan="4">{{ artist.usualstyle or artist.collectionstyle }}</td>
-          <td>${{ '{:,.2f}'.format(artist.saleslastyear) if artist.saleslastyear else '0.00' }}</td>
-          <td>${{ '{:,.2f}'.format(artist.salesyeartodate) if artist.salesyeartodate else '0.00' }}</td>
+          <td>{{ collector.firstname }} {{ collector.lastname }}</td>
+          <td>{{ collector.street }}</td>
+          <td>{{collector.areacode }}-{{ collector.telephonenumber }}</td>
+          <td colspan="4">{{ collector.collectionartistid }}</td>
+          <td colspan="4">{{ collector.usualtype or collector.collectiontype }}</td>
+          <td colspan="4">{{ collector.usualmedium or collector.collectionmedium }}</td>
+          <td colspan="4">{{ collector.usualstyle or collector.collectionstyle }}</td>
+          <td>${{ '{:,.2f}'.format(collector.saleslastyear) if collector.saleslastyear else '0.00' }}</td>
+          <td>${{ '{:,.2f}'.format(collector.salesyeartodate) if collector.salesyeartodate else '0.00' }}</td>
         </tr>
         {% endfor %}
       </tbody>

@@ -1,15 +1,22 @@
-from sqlalchemy import Column, Integer, Numeric, Date, CHAR, ForeignKey
+from sqlalchemy import Column, Integer, Numeric, Date, CHAR, ForeignKey, Sequence
+from sqlalchemy.schema import FetchedValue
 from database.database import Base
 
 class Sale(Base):
-    __tablename__ = 'SALE'  # Corrected table name
-    __table_args__ = {'schema': 'JJUMAEV'}  # Schema for Oracle
+    __tablename__ = 'SALE'
+    __table_args__ = {'schema': 'JJUMAEV'}
 
-    invoicenumber = Column(Integer, primary_key=True, index=True)
-    artworkid = Column(Integer, ForeignKey('JJUMAEV.ARTWORK.artworkid'), nullable=False)
-    amountremittedtoowner = Column(Numeric(8, 2), nullable=True, default=0.00)
-    saledate = Column(Date, nullable=True)
-    saleprice = Column(Numeric(8, 2), nullable=True)
-    saletax = Column(Numeric(6, 2), nullable=True)
-    buyerid = Column(Integer, ForeignKey('JJUMAEV.COLLECTOR.collectorid'), nullable=False)
-    salespersonssn = Column(CHAR(9), nullable=True)
+    invoicenumber = Column(
+        Integer, 
+        Sequence('SALE_INVOICE_SEQUENCE', schema='JJUMAEV'),
+        primary_key=True,
+        server_default=FetchedValue()
+    )
+    
+    artworkid = Column(Integer, ForeignKey('JJUMAEV.ARTWORK.artworkid'))
+    amountremittedtoowner = Column(Numeric(10, 2))
+    saledate = Column(Date)
+    saleprice = Column(Numeric(10, 2))
+    saletax = Column(Numeric(6, 2))
+    buyerid = Column(Integer, ForeignKey('JJUMAEV.BUYER.buyerid'))
+    salespersonssn = Column(CHAR(9), ForeignKey('JJUMAEV.SALESPERSON.socialsecuritynumber'))
