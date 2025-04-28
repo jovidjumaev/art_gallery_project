@@ -35,6 +35,7 @@ router = APIRouter(
     tags=["Form"]
 )
 
+today = datetime.now().strftime('%Y-%m-%d')  # Get current date for all responses
 
 # DB Dependency
 def get_db():

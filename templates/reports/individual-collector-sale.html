@@ -1,155 +1,115 @@
-{% extends "index.html" %}
+{% extends 'index.html' %}
 
 {% block content %}
-<div class="report-container">
-    <div class="report-header">
-        <h1>Collector Sales Report</h1>
-        <div class="report-info">
-            <p><strong>Collector:</strong> {{ collector.name }}</p>
-            <p><strong>Period:</strong> {{ start_date }} to {{ end_date }}</p>
-        </div>
+<div class="report-wrapper">
+  <section class="report-section">
+    <h1 class="section-title">🎨 Works Sold</h1>
+    <div class="table-container">
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Date Listed</th>
+            <th>Type</th>
+            <th>Medium</th>
+            <th>Style</th>
+            <th>Year</th>
+            <th>Asking Price</th>
+            <th>Sell Price</th>
+            <th>Date Sold</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sw in sold_works %}
+          <tr>
+            <td>{{ sw.worktitle }}</td>
+            <td>{{ artist_id }}</td>
+            <td>{{ sw.datelisted }}</td>
+            <td>{{ sw.worktype }}</td>
+            <td>{{ sw.workmedium }}</td>
+            <td>{{ sw.workstyle }}</td>
+            <td>{{ sw.workyearcompleted }}</td>
+            <td>${{ '{:,.2f}'.format(sw.askingprice) if sw.askingprice else '0.00' }}</td>
+            <td>${{ '{:,.2f}'.format(sw.saleprice) if sw.saleprice else '0.00' }}</td>
+            <td>{{ sw.saledate }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+    <h2 class="summary-text">🧾 Total Sales: <span class="summary-number">${{ '{:,.2f}'.format(total_sales) if total_sales else '0.00' }}</span></h2>
+  </section>
 
-    <div class="report-summary">
-        <div class="summary-card">
-            <h3>Total Sales</h3>
-            <p class="amount">${{ "%.2f"|format(total_sales) }}</p>
-        </div>
-        <div class="summary-card">
-            <h3>Number of Artworks</h3>
-            <p class="count">{{ sales|length }}</p>
-        </div>
+  <section class="report-section">
+    <h1 class="section-title">🖼️ Works Returned</h1>
+    <div class="table-container">
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Date Listed</th>
+            <th>Type</th>
+            <th>Medium</th>
+            <th>Style</th>
+            <th>Year</th>
+            <th>Asking Price</th>
+            <th>Date Returned</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rw in returned_works %}
+          <tr>
+            <td>{{ rw.worktitle }}</td>
+            <td>{{ artist_id }}</td>
+            <td>{{ rw.datelisted }}</td>
+            <td>{{ rw.worktype }}</td>
+            <td>{{ rw.workmedium }}</td>
+            <td>{{ rw.workstyle }}</td>
+            <td>{{ rw.workyearcompleted }}</td>
+            <td>${{ '{:,.2f}'.format(rw.askingprice) if rw.askingprice else '0.00' }}</td>
+            <td>{{ rw.datereturned }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </section>
 
-    <div class="sales-table">
-        <h2>Sales Details</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Artwork ID</th>
-                    <th>Title</th>
-                    <th>Sale Date</th>
-                    <th>Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for sale in sales %}
-                <tr>
-                    <td>{{ sale.artwork_id }}</td>
-                    <td>{{ sale.title }}</td>
-                    <td>{{ sale.sale_date }}</td>
-                    <td>${{ "%.2f"|format(sale.price) }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+  <section class="report-section">
+    <h1 class="section-title">🖌️ Artwork For Sale</h1>
+    <div class="table-container">
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Date Listed</th>
+            <th>Type</th>
+            <th>Medium</th>
+            <th>Style</th>
+            <th>Year</th>
+            <th>Asking Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for fsw in forSale_works %}
+          <tr>
+            <td>{{ fsw.worktitle }}</td>
+            <td>{{ artist_id }}</td>
+            <td>{{ fsw.datelisted }}</td>
+            <td>{{ fsw.worktype }}</td>
+            <td>{{ fsw.workmedium }}</td>
+            <td>{{ fsw.workstyle }}</td>
+            <td>{{ fsw.workyearcompleted }}</td>
+            <td>${{ '{:,.2f}'.format(fsw.askingprice) if fsw.askingprice else '0.00' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+    <h2 class="summary-text">💰 Total Asking Price: <span class="summary-number">${{ '{:,.2f}'.format(total_asking_price) if total_asking_price else '0.00' }}</span></h2>
+  </section>
 </div>
-
-<style>
-    .report-container {
-        max-width: 1200px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .report-header {
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #f0f0f0;
-    }
-
-    .report-header h1 {
-        color: #333;
-        margin-bottom: 1rem;
-    }
-
-    .report-info {
-        display: flex;
-        gap: 2rem;
-        color: #666;
-    }
-
-    .report-summary {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    .summary-card {
-        background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 8px;
-        text-align: center;
-    }
-
-    .summary-card h3 {
-        color: #666;
-        margin-bottom: 0.5rem;
-        font-size: 1rem;
-    }
-
-    .summary-card .amount {
-        color: #2c3e50;
-        font-size: 1.5rem;
-        font-weight: bold;
-    }
-
-    .summary-card .count {
-        color: #2c3e50;
-        font-size: 1.5rem;
-        font-weight: bold;
-    }
-
-    .sales-table {
-        margin-top: 2rem;
-    }
-
-    .sales-table h2 {
-        color: #333;
-        margin-bottom: 1rem;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1rem;
-    }
-
-    th, td {
-        padding: 1rem;
-        text-align: left;
-        border-bottom: 1px solid #eee;
-    }
-
-    th {
-        background-color: #f8f9fa;
-        font-weight: 600;
-        color: #666;
-    }
-
-    tr:hover {
-        background-color: #f8f9fa;
-    }
-
-    @media (max-width: 768px) {
-        .report-container {
-            padding: 1rem;
-            margin: 1rem;
-        }
-
-        .report-info {
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .summary-card {
-            padding: 1rem;
-        }
-    }
-</style>
 {% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+
+{% for collector in collectors %}
+
+  {{ collector.firstname }} {{ collector.lastname }}
+  {{ collector.street }}
+  {{collector.areacode }}-{{ collector.telephonenumber }}
+  <br>
+{% endfor %}
+
+{% endblock %}
