@@ -17,6 +17,7 @@ from database.database import SessionLocal
 from routes.report import router as report_router
 from routes.form import router as form_router
 from routes.auth import router as auth_router
+from routes.zip import router as zip_router
 
 
 # Sub-application
@@ -45,6 +46,7 @@ async def about_me(request: Request):
 gallery_app.include_router(report_router)
 gallery_app.include_router(form_router)
 gallery_app.include_router(auth_router)
+gallery_app.include_router(zip_router)
 
 
 # Main application

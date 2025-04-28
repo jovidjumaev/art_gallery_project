@@ -1,73 +1,238 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<div class="form-selection-wrapper">
-  <h2>Select a Report</h2>
+<div class="form-selection-wrapper fade-in">
+  <div class="report-header">
+    <h2>Select a Report</h2>
+    <p class="subtitle">Access detailed insights and analytics about our gallery's operations</p>
+  </div>
 
   <div class="form-grid">
     <a href="/artgalleryproject/report/active-artists" class="form-card">
-      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/active-artist.jpg');"></div>
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/active-artist.jpg');">
+        <div class="card-overlay"></div>
+      </div>
       <div class="card-content">
         <h3>Active Artists Summary</h3>
         <p>View a list of currently active artists and their details.</p>
+        <span class="card-icon">👥</span>
       </div>
     </a>
 
     <a href="/artgalleryproject/report/individual-artist" class="form-card">
-      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/individual-coll-sale.jpeg');"></div>
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/individual-coll-sale.jpeg');">
+        <div class="card-overlay"></div>
+      </div>
       <div class="card-content">
         <h3>Individual Artist Sales</h3>
         <p>View sales information for a selected artist.</p>
+        <span class="card-icon">📊</span>
       </div>
     </a>
 
     <a href="/artgalleryproject/report/collector-summary" class="form-card">
-      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/collector-summary.jpg');"></div>
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/collector-summary.jpg');">
+        <div class="card-overlay"></div>
+      </div>
       <div class="card-content">
         <h3>Collectors Summary</h3>
         <p>Overview of all art collectors in the gallery.</p>
+        <span class="card-icon">🎨</span>
       </div>
     </a>
 
     <a href="/artgalleryproject/report/individual-collector-sale" class="form-card">
-      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/collector-sale.jpg');"></div>
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/collector-sale.jpg');">
+        <div class="card-overlay"></div>
+      </div>
       <div class="card-content">
         <h3>Individual Collector Sales</h3>
         <p>Sales history for an individual collector.</p>
+        <span class="card-icon">💎</span>
       </div>
     </a>
 
     <a href="/artgalleryproject/report/work-for-sale" class="form-card">
-      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/on-sale.jpg');"></div>
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/on-sale.jpg');">
+        <div class="card-overlay"></div>
+      </div>
       <div class="card-content">
         <h3>Works for Sale</h3>
         <p>List of artworks currently available for sale.</p>
+        <span class="card-icon">🖼️</span>
       </div>
     </a>
 
     <a href="/artgalleryproject/report/sales-this-week" class="form-card">
-      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/this-week-sale.jpg');"></div>
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/this-week-sale.jpg');">
+        <div class="card-overlay"></div>
+      </div>
       <div class="card-content">
         <h3>Sales This Week</h3>
         <p>Report of all artworks sold in the past week.</p>
+        <span class="card-icon">📈</span>
       </div>
     </a>
 
     <a href="/artgalleryproject/report/aged-artworks" class="form-card">
-      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/age-artwork.jpg');"></div>
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/age-artwork.jpg');">
+        <div class="card-overlay"></div>
+      </div>
       <div class="card-content">
         <h3>Aged Artworks</h3>
         <p>Artworks that have been listed for a long period.</p>
+        <span class="card-icon">⏳</span>
       </div>
     </a>
 
     <a href="/artgalleryproject/report/show-details" class="form-card">
-      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/artwork.jpg');"></div>
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/artwork.jpg');">
+        <div class="card-overlay"></div>
+      </div>
       <div class="card-content">
         <h3>Art Show Details</h3>
         <p>Details about current and past art shows.</p>
+        <span class="card-icon">🎭</span>
       </div>
     </a>
   </div>
 </div>
+
+<style>
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.form-selection-wrapper {
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, #f6f9fc 0%, #eef2f7 100%);
+    min-height: 100vh;
+}
+
+.report-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.report-header h2 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.report-header .subtitle {
+    color: #4a5568;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.form-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+}
+
+.form-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.card-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4));
+    transition: all 0.3s ease;
+}
+
+.form-card:hover .card-overlay {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.5));
+}
+
+.card-content {
+    padding: 1.5rem;
+    position: relative;
+}
+
+.card-content h3 {
+    color: #2d3748;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.card-content p {
+    color: #4a5568;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.card-icon {
+    position: absolute;
+    top: -2.5rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    background: white;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .form-selection-wrapper {
+        padding: 2rem 1rem;
+    }
+
+    .report-header h2 {
+        font-size: 2rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-image {
+        height: 180px;
+    }
+}
+</style>
 {% endblock %}

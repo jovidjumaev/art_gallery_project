@@ -2,64 +2,216 @@
 
 
 {% block content %}
-<div class="form-selection-wrapper">
-  <h2>Select a Form to Fill Out</h2>
+<div class="form-selection-wrapper fade-in">
+  <div class="form-header">
+    <h2>Select a Form</h2>
+    <p class="subtitle">Choose the appropriate form to manage your gallery operations</p>
+  </div>
 
   <div class="form-grid">
-    <!-- Artist Form Card -->
     <a href="/artgalleryproject/form/add-artist" class="form-card">
-      <div class="card-image" style="background-image: url('/artgalleryproject/static/images/artist.jpeg');"></div>
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/artist.jpeg');">
+        <div class="card-overlay"></div>
+      </div>
       <div class="card-content">
-        <h3>Artist Information</h3>
-        <p>Add a new artist to the gallery database.</p>
+        <h3>Artist Registration</h3>
+        <p>Register new artists and manage their information.</p>
+        <span class="card-icon">🎨</span>
       </div>
     </a>
 
-    <!-- Collector Form Card -->
     <a href="/artgalleryproject/form/collector-form" class="form-card">
-      <div class="card-image" style="background-image: url('/artgalleryproject/static/images/art-collector.jpg');"></div>
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/art-collector.jpg');">
+        <div class="card-overlay"></div>
+      </div>
       <div class="card-content">
-        <h3>Collector Information</h3>
-        <p>Register a new art collector profile.</p>
+        <h3>Collector Registration</h3>
+        <p>Add new art collectors to the gallery database.</p>
+        <span class="card-icon">👥</span>
       </div>
     </a>
 
-    <!-- Buyer Form Card -->
-    <a href="/artgalleryproject/form/buyer-info" class="form-card">
-      <div class="card-image" style="background-image: url('/artgalleryproject/static/images/report-img/art-sale.jpg');"></div>
-      <div class="card-content">
-        <h3>Buyer Information</h3>
-        <p>Register a new buyer profile.</p>
-      </div>
-    </a>
-
-    <!-- Artwork Form Card -->
     <a href="/artgalleryproject/form/artwork-form" class="form-card">
-      <div class="card-image" style="background-image: url('/artgalleryproject/static/images/artwork.jpg');"></div>
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/artwork.jpg');">
+        <div class="card-overlay"></div>
+      </div>
       <div class="card-content">
         <h3>Artwork Information</h3>
-        <p>Enter artwork details for exhibition and sale.</p>
+        <p>Add new artworks and their details to the gallery.</p>
+        <span class="card-icon">🖼️</span>
       </div>
     </a>
 
-    <!-- Sale Invoice Form Card -->
     <a href="/artgalleryproject/form/sale-invoice" class="form-card">
-      <div class="card-image" style="background-image: url('/artgalleryproject/static/images/invoice.jpg');"></div>
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/invoice.jpg');">
+        <div class="card-overlay"></div>
+      </div>
       <div class="card-content">
-        <h3>Sale Invoice</h3>
-        <p>Record the completed sale of an artwork.</p>
+        <h3>Invoice Generation</h3>
+        <p>Create and manage sales invoices for artwork purchases.</p>
+        <span class="card-icon">📝</span>
       </div>
     </a>
 
-    <!-- Mailing List Form Card -->
+    <a href="/artgalleryproject/form/buyer-info" class="form-card">
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/art-sale.jpg');">
+        <div class="card-overlay"></div>
+      </div>
+      <div class="card-content">
+        <h3>Buyer Registration</h3>
+        <p>Register new buyers in the gallery system.</p>
+        <span class="card-icon">💰</span>
+      </div>
+    </a>
+
     <a href="/artgalleryproject/form/mailing-list-form" class="form-card">
-      <div class="card-image" style="background-image: url('/artgalleryproject/static/images/mailist.jpg');"></div>
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/mailist.jpg');">
+        <div class="card-overlay"></div>
+      </div>
       <div class="card-content">
-        <h3>Mailing List Form</h3>
-        <p>Add a customer to the gallery's mailing list.</p>
+        <h3>Mailing List</h3>
+        <p>Add customers to the gallery's mailing list.</p>
+        <span class="card-icon">📧</span>
       </div>
     </a>
-
   </div>
 </div>
+
+<style>
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.form-selection-wrapper {
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, #f6f9fc 0%, #eef2f7 100%);
+    min-height: 100vh;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.form-header h2 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.form-header .subtitle {
+    color: #4a5568;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.form-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+}
+
+.form-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.card-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4));
+    transition: all 0.3s ease;
+}
+
+.form-card:hover .card-overlay {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.5));
+}
+
+.card-content {
+    padding: 1.5rem;
+    position: relative;
+}
+
+.card-content h3 {
+    color: #2d3748;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.card-content p {
+    color: #4a5568;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.card-icon {
+    position: absolute;
+    top: -2.5rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    background: white;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .form-selection-wrapper {
+        padding: 2rem 1rem;
+    }
+
+    .form-header h2 {
+        font-size: 2rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-image {
+        height: 180px;
+    }
+}
+</style>
 {% endblock %}

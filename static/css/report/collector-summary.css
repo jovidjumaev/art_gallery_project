@@ -115,7 +115,7 @@
   vertical-align: middle;
 }
 
-/* Artist Name Column */
+/* Collector Name Column */
 .report-table td:first-child {
   font-weight: 600;
   color: var(--primary);
@@ -178,4 +178,4 @@
 
 .report-wrapper {
   animation: fadeIn 0.6s ease-out;
-}
+} 

@@ -1,44 +1,298 @@
 {% extends "index.html" %}
 
 {% block content %}
-<section class="hero">
-  <div class="hero-text">
-    <h1>Welcome to Furman Art Gallery</h1>
-    <p>Discover, experience, and connect with extraordinary works of art.</p>
-    <a href="/artgalleryproject/form/find-artwork" class="btn-primary">Find Artwork</a>
-  </div>
-</section>
+<div class="fade-in">
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Welcome to Furman Art Gallery</h1>
+      <p>Discover, experience, and connect with extraordinary works of art.</p>
+      <a href="/artgalleryproject/form/find-artwork" class="btn-primary">Find Artwork</a>
+    </div>
+  </section>
 
-<section class="featured-section">
-  <h2>Featured Works</h2>
-  <div class="gallery-grid">
-    <div class="art-card">
-      <img src="{{ request.scope.root_path }}/static/images/art1.jpg" alt="Artwork 1">
-      <h3>The Starry Night</h3>
-      <p>By Vincent Van Gogh</p>
+  <section class="featured-section">
+    <h2>Featured Works</h2>
+    <div class="gallery-grid">
+      <div class="art-card">
+        <img src="{{ request.scope.root_path }}/static/images/art1.jpg" alt="Artwork 1">
+        <h3>The Starry Night</h3>
+        <p>By Vincent Van Gogh</p>
+      </div>
+      <div class="art-card">
+        <img src="{{ request.scope.root_path }}/static/images/art2.jpg" alt="Artwork 2">
+        <h3>A Memory of Phnom Penh</h3>
+        <p>By Yamada Takakaz</p>
+      </div>
+      <div class="art-card">
+        <img src="{{ request.scope.root_path }}/static/images/art3.jpg" alt="Artwork 3">
+        <h3>Mona Lisa</h3>
+        <p>By Leonardo da Vinci</p>
+      </div>
     </div>
-    <div class="art-card">
-      <img src="{{ request.scope.root_path }}/static/images/art2.jpg" alt="Artwork 2">
-      <h3>A Memory of Phnom Penh</h3>
-      <p>By Yamada Takakaz</p>
-    </div>
-    <div class="art-card">
-      <img src="{{ request.scope.root_path }}/static/images/art3.jpg" alt="Artwork 3">
-      <h3>Mona Lisa</h3>
-      <p>By Leonardo da Vinci</p>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="about-section">
-  <h2>About Us</h2>
-  <p>
-    Furman Art Gallery is a contemporary space dedicated to showcasing unique and inspiring artwork from talented artists around the world.
-    Our mission is to connect people with art that moves, challenges, and transforms.
-  </p>
-</section>
+  <section class="why-choose-us">
+    <h2>Why Choose Furman Art Gallery</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Artworks</div>
+        <p>Curated collection of unique pieces from emerging and established artists</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">50+</div>
+        <div class="stat-label">Artists</div>
+        <p>Representing diverse talents from around the globe</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">15+</div>
+        <div class="stat-label">Years</div>
+        <p>Of expertise in the art market</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Authentic</div>
+        <p>Verified and certified original artworks</p>
+      </div>
+    </div>
+    
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <i class="fas fa-certificate"></i>
+        <h3>Expert Curation</h3>
+        <p>Each piece is carefully selected by our team of art experts</p>
+      </div>
+      <div class="benefit-card">
+        <i class="fas fa-handshake"></i>
+        <h3>Personal Service</h3>
+        <p>Dedicated art consultants to guide your collection journey</p>
+      </div>
+      <div class="benefit-card">
+        <i class="fas fa-shield-alt"></i>
+        <h3>Secure Investment</h3>
+        <p>Authentication certificates and detailed artwork history</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-section">
+    <div class="about-container">
+      <h2>About Us</h2>
+      <p>
+        Furman Art Gallery is a contemporary space dedicated to showcasing unique and inspiring artwork from talented artists around the world.
+        Our mission is to connect people with art that moves, challenges, and transforms.
+      </p>
+    </div>
+  </section>
+</div>
+
+<style>
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.why-choose-us {
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, #f6f9fc 0%, #eef2f7 100%);
+}
+
+.why-choose-us h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    border-color: #e1e8ed;
+}
+
+.stat-number {
+    font-size: 2.8rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-card p {
+    color: #4a5568;
+    line-height: 1.6;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 4rem;
+}
+
+.benefit-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+    padding: 2.5rem 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    border-color: #e1e8ed;
+}
+
+.benefit-card i {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem;
+}
+
+.benefit-card h3 {
+    color: #2d3748;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.benefit-card p {
+    color: #4a5568;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .stats-grid,
+    .benefits-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-card,
+    .benefit-card {
+        margin-bottom: 1rem;
+    }
+
+    .why-choose-us h2 {
+        font-size: 2rem;
+    }
+}
+
+.about-section {
+    padding: 5rem 2rem;
+    background: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.1) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.1) 75%);
+    background-size: 20px 20px;
+    opacity: 0.1;
+}
+
+.about-container {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.about-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    display: inline-block;
+}
+
+.about-section h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: rgba(255,255,255,0.5);
+    margin: 1rem auto 0;
+    border-radius: 2px;
+}
+
+.about-section p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin: 0 auto;
+    max-width: 700px;
+    color: rgba(255,255,255,0.9);
+}
+
+@media (max-width: 768px) {
+    .about-section {
+        padding: 4rem 1.5rem;
+    }
+    
+    .about-section h2 {
+        font-size: 2rem;
+    }
+    
+    .about-section p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+}
+</style>
 {% endblock %}
 
 {% block script %}
-<!-- If you have any extra JavaScript for homepage, add here -->
+<!-- Font Awesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 {% endblock %}

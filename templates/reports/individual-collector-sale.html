@@ -1,40 +1,155 @@
-{% extends 'index.html' %}
+{% extends "index.html" %}
 
 {% block content %}
-<h1 class="report-title">Collectors Summary Report</h1>
+<div class="report-container">
+    <div class="report-header">
+        <h1>Collector Sales Report</h1>
+        <div class="report-info">
+            <p><strong>Collector:</strong> {{ collector.name }}</p>
+            <p><strong>Period:</strong> {{ start_date }} to {{ end_date }}</p>
+        </div>
+    </div>
 
-<div class="table-wrapper">
-  <div class="table-container">
-    <table class="styled-table">
-      <thead>
-        <tr>
-          <th rowspan="2">Collector Name</th>
-          <th rowspan="2">Address</th>
-          <th rowspan="2">Phone</th>
-          <th colspan="4">Preferred Artist</th>
-          <th colspan="4">Preferred Type</th>
-          <th colspan="4">Preferred Medium</th>
-          <th colspan="4">Preferred Style</th>
-          <th rowspan="2">Sales Last Year</th>
-          <th rowspan="2">Sales YTD</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for collector in collectors %}
-        <tr>
-          <td>{{ collector.firstname }} {{ collector.lastname }}</td>
-          <td>{{ collector.street }}</td>
-          <td>{{collector.areacode }}-{{ collector.telephonenumber }}</td>
-          <td colspan="4">{{ collector.collectionartistid }}</td>
-          <td colspan="4">{{ collector.usualtype or collector.collectiontype }}</td>
-          <td colspan="4">{{ collector.usualmedium or collector.collectionmedium }}</td>
-          <td colspan="4">{{ collector.usualstyle or collector.collectionstyle }}</td>
-          <td>${{ '{:,.2f}'.format(collector.saleslastyear) if collector.saleslastyear else '0.00' }}</td>
-          <td>${{ '{:,.2f}'.format(collector.salesyeartodate) if collector.salesyeartodate else '0.00' }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+    <div class="report-summary">
+        <div class="summary-card">
+            <h3>Total Sales</h3>
+            <p class="amount">${{ "%.2f"|format(total_sales) }}</p>
+        </div>
+        <div class="summary-card">
+            <h3>Number of Artworks</h3>
+            <p class="count">{{ sales|length }}</p>
+        </div>
+    </div>
+
+    <div class="sales-table">
+        <h2>Sales Details</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Artwork ID</th>
+                    <th>Title</th>
+                    <th>Sale Date</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in sales %}
+                <tr>
+                    <td>{{ sale.artwork_id }}</td>
+                    <td>{{ sale.title }}</td>
+                    <td>{{ sale.sale_date }}</td>
+                    <td>${{ "%.2f"|format(sale.price) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<style>
+    .report-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .report-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .report-header h1 {
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .report-info {
+        display: flex;
+        gap: 2rem;
+        color: #666;
+    }
+
+    .report-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .summary-card {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .summary-card h3 {
+        color: #666;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .summary-card .amount {
+        color: #2c3e50;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .summary-card .count {
+        color: #2c3e50;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .sales-table {
+        margin-top: 2rem;
+    }
+
+    .sales-table h2 {
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+
+    th, td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #666;
+    }
+
+    tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    @media (max-width: 768px) {
+        .report-container {
+            padding: 1rem;
+            margin: 1rem;
+        }
+
+        .report-info {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .summary-card {
+            padding: 1rem;
+        }
+    }
+</style>
 {% endblock %}

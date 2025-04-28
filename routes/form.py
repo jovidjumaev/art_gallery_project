@@ -824,9 +824,12 @@ async def find_artwork_history(
     artwork_title: str = Form(...),
     db: Session = Depends(get_db)
 ):
-    # Redirect if any field is missing
+    # Validate that all required fields are filled
     if not artist_firstname.strip() or not artist_lastname.strip() or not artwork_title.strip():
-        return RedirectResponse(url="/artgalleryproject/find-artwork-history-form", status_code=303)
+        return templates.TemplateResponse("find_artwork_history_form.html", {
+            "request": request,
+            "error": "❌ All fields (Artist First Name, Last Name, and Artwork Title) are required."
+        })
 
     # Clean user input
     artist_firstname_cleaned = artist_firstname.strip().lower()
@@ -857,11 +860,11 @@ async def find_artwork_history(
         shows = db.query(ShownIn).filter(ShownIn.artworkid == artwork.artworkid).all()
         sale = db.query(Sale).filter(Sale.artworkid == artwork.artworkid).first()
 
-    return templates.TemplateResponse("artwork_history.html", {
+    return templates.TemplateResponse("artwork_history_result.html", {
         "request": request,
         "artwork": artwork,
-        "shows": shows,
-        "sale": sale,
+        "show_history": shows,
+        "sale_info": sale,
         "no_data_message": "No matching artwork found." if not artwork else None
     })
 

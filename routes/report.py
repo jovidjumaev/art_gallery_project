@@ -3,6 +3,7 @@ from fastapi import APIRouter, Query, Request, Depends, Form
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from datetime import date, timedelta
+from fastapi.responses import RedirectResponse
 
 from models.artist import Artist
 from models.collector import Collector
@@ -46,12 +47,76 @@ def read_artists(request: Request, db: Session = Depends(get_db)):
 
 #F
 @router.get("/individual-collector-sale")
-def individual_collector(request: Request, db: Session = Depends(get_db)):
-    collector = db.query(Collector).all()
-    return templates.TemplateResponse("/reports/individual-collector-sale.html", {"request": request, "collectors": collector})
+async def individual_collector_sale(request: Request):
+    db = next(get_db())
+    collectors = db.query(Collector).all()
+    today = date.today()
+    end_of_year = date(today.year, 12, 31)
+    return templates.TemplateResponse(
+        "collector-report-form.html",
+        {"request": request, "collectors": collectors, "today": today, "end_of_year": end_of_year}
+    )
+
+@router.post("/individual-collector-sale")
+async def individual_collector_sale_report(request: Request):
+    db = next(get_db())
+    form_data = await request.form()
+    collector_id = form_data.get("collector_id")
+    start_date = form_data.get("start_date")
+    end_date = form_data.get("end_date")
+
+    if not collector_id or not start_date or not end_date:
+        return RedirectResponse(url="/artgalleryproject/report/individual-collector-sale", status_code=303)
+
+    collector = db.query(Collector).filter(Collector.socialsecuritynumber == collector_id).first()
+    if not collector:
+        return RedirectResponse(url="/artgalleryproject/report/individual-collector-sale", status_code=303)
+
+    # Convert string dates to date objects
+    start_date_obj = date.fromisoformat(start_date)
+    end_date_obj = date.fromisoformat(end_date)
+
+    # Get all sales for the collector within the date range by joining with Artwork
+    sales = (
+        db.query(Sale)
+        .join(Artwork, Sale.artworkid == Artwork.artworkid)
+        .filter(
+            Artwork.collectorsocialsecuritynumber == collector_id,
+            Sale.saledate >= start_date_obj,
+            Sale.saledate <= end_date_obj
+        )
+        .all()
+    )
+
+    # Calculate total sales amount
+    total_sales = sum(sale.saleprice for sale in sales)
+
+    # Get artwork details for each sale
+    sale_details = []
+    for sale in sales:
+        artwork = db.query(Artwork).filter(Artwork.artworkid == sale.artworkid).first()
+        if artwork:
+            sale_details.append({
+                "artwork_id": artwork.artworkid,
+                "title": artwork.worktitle,
+                "sale_date": sale.saledate,
+                "price": sale.saleprice
+            })
+
+    return templates.TemplateResponse(
+        "reports/individual-collector-sale.html",
+        {
+            "request": request,
+            "collector": collector,
+            "sales": sale_details,
+            "total_sales": total_sales,
+            "start_date": start_date,
+            "end_date": end_date
+        }
+    )
 
 @router.get('/individual-artist')
-def individual_artist(request: Request, db: Session = Depends(get_db)): 
+def individual_artist(request: Request, db: Session = Depends(get_db)):
     artist = db.query(Artist).all()
     return templates.TemplateResponse("/artist-report-form.html", {"request": request, "artists": artist})
 
@@ -208,10 +273,13 @@ def get_collector_summary(request: Request, db: Session = Depends(get_db)):
     ])
 
     collectors = [CollectorSummary(*row) for row in raw_results]
+    today = date.today()
+    formatted_date = today.strftime("%m/%d/%Y")
 
     return templates.TemplateResponse("/reports/collector-summary.html", {
         "request": request,
-        "collectors": collectors
+        "collectors": collectors,
+        "todayDate": formatted_date
     })
 
 @router.get("/sales-this-week")

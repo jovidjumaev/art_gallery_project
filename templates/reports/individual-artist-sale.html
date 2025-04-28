@@ -2,7 +2,6 @@
 
 {% block content %}
 <div class="report-wrapper">
-  <h1>helo</h1>
   <section class="report-section">
     <h1 class="section-title">🎨 Works Sold</h1>
     <div class="table-container">
@@ -31,15 +30,15 @@
             <td>{{ sw.workmedium }}</td>
             <td>{{ sw.workstyle }}</td>
             <td>{{ sw.workyearcompleted }}</td>
-            <td>{{ sw.askingprice }}</td>
-            <td>{{ sw.saleprice }}</td>
+            <td>${{ '{:,.2f}'.format(sw.askingprice) if sw.askingprice else '0.00' }}</td>
+            <td>${{ '{:,.2f}'.format(sw.saleprice) if sw.saleprice else '0.00' }}</td>
             <td>{{ sw.saledate }}</td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
-    <h2 class="summary-text">🧾 Total Sales: <span class="summary-number">${{ total_sales }}</span></h2>
+    <h2 class="summary-text">🧾 Total Sales: <span class="summary-number">${{ '{:,.2f}'.format(total_sales) if total_sales else '0.00' }}</span></h2>
   </section>
 
   <section class="report-section">
@@ -69,7 +68,7 @@
             <td>{{ rw.workmedium }}</td>
             <td>{{ rw.workstyle }}</td>
             <td>{{ rw.workyearcompleted }}</td>
-            <td>{{ rw.askingprice }}</td>
+            <td>${{ '{:,.2f}'.format(rw.askingprice) if rw.askingprice else '0.00' }}</td>
             <td>{{ rw.datereturned }}</td>
           </tr>
           {% endfor %}
@@ -104,14 +103,13 @@
             <td>{{ fsw.workmedium }}</td>
             <td>{{ fsw.workstyle }}</td>
             <td>{{ fsw.workyearcompleted }}</td>
-            <td>{{ fsw.askingprice }}</td>
+            <td>${{ '{:,.2f}'.format(fsw.askingprice) if fsw.askingprice else '0.00' }}</td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
-    <h2 class="summary-text">💰 Total Asking Price: <span class="summary-number">${{ total_asking_price }}</span></h2>
+    <h2 class="summary-text">💰 Total Asking Price: <span class="summary-number">${{ '{:,.2f}'.format(total_asking_price) if total_asking_price else '0.00' }}</span></h2>
   </section>
-
 </div>
 {% endblock %}

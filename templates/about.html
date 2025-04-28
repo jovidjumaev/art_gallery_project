@@ -1,18 +1,212 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<div class="about-wrapper">
-  <div class="about-container">
-    <h1>🎨 About This Project</h1>
-    <p>Welcome to the Art Gallery Management System!</p>
-    <p>This project was built to help manage artists, artworks, collectors, and sales efficiently. It allows users to add new artworks, register collectors, track artwork history, and generate useful reports. 
-    </p>
-    <p>Built with ❤️ using FastAPI, SQLAlchemy, Jinja2, and Oracle Database, this system aims to provide a smooth and professional experience for managing gallery operations.</p>
+<div class="about-container">
+    <div class="about-header">
+        <div class="header-icon">🎨</div>
+        <h1>About This Project</h1>
+        <p class="about-description">Welcome to the Art Gallery Management System!</p>
+    </div>
 
-    <h2>👨‍💻 About the Developer</h2>
-    <p>Hello! My name is Mengsrun Nit, and I'm a junior studying Computer Science and Data Analytics at Furman University. 
-    I built this project to sharpen my backend development skills, work with databases, and create a real-world system that makes a difference. 
-    I'm passionate about building practical, efficient software and always eager to learn new technologies!</p>
-  </div>
+    <div class="about-section">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-icon">📋</div>
+                <h2>Project Overview</h2>
+            </div>
+            <div class="section-body">
+                <p>This project was built to help manage artists, artworks, collectors, and sales efficiently. It allows users to add new artworks, register collectors, track artwork history, and generate useful reports.</p>
+                <p>Built with ❤️ using FastAPI, SQLAlchemy, Jinja2, and Oracle Database, this system aims to provide a smooth and professional experience for managing gallery operations.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="about-section">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-icon">👨‍💻</div>
+                <h2>About the Developers</h2>
+            </div>
+            <div class="section-body">
+                <p>Hello! We are Mengsrun Nit, Jovid Jumaev and Jalen Livingston and we are juniors and senior studying Computer Science and Data Analytics students at Furman University.</p>
+                <p>We built this project to sharpen our backend development skills, work with databases, and create a real-world system that makes a difference. We are passionate about building practical, efficient software and always eager to learn new technologies!</p>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+:root {
+    --primary-bg: #f8f9fa;
+    --section-bg: #f1f3f5;
+    --accent-color: #6c757d;
+    --text-dark: #343a40;
+    --text-light: #6c757d;
+    --border-color: #dee2e6;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --header-gradient-start: #6c757d;
+    --header-gradient-end: #495057;
+}
+
+.about-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--primary-bg);
+    border-radius: 16px;
+    box-shadow: 0 8px 16px var(--shadow-color);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+    border-radius: 12px;
+    color: white;
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.header-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+}
+
+.about-header h1 {
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.about-description {
+    font-size: 1.3rem;
+    opacity: 0.9;
+}
+
+.about-section {
+    background: var(--section-bg);
+    padding: 2.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.about-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px var(--shadow-color);
+    border-color: var(--accent-color);
+}
+
+.section-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.section-icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+    background: var(--primary-bg);
+    padding: 0.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.section-content h2 {
+    color: var(--text-dark);
+    font-size: 2rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.section-body {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.section-body p {
+    margin-bottom: 1.5rem;
+}
+
+.section-body p:last-child {
+    margin-bottom: 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@media (max-width: 768px) {
+    .about-container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    .about-header {
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .header-icon {
+        font-size: 2.5rem;
+    }
+
+    .about-header h1 {
+        font-size: 2rem;
+    }
+
+    .about-description {
+        font-size: 1.1rem;
+    }
+
+    .about-section {
+        padding: 1.5rem;
+    }
+
+    .section-header {
+        margin-bottom: 1rem;
+    }
+
+    .section-icon {
+        font-size: 1.5rem;
+    }
+
+    .section-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .section-body {
+        font-size: 1rem;
+    }
+}
+</style>
 {% endblock %}

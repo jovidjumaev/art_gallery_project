@@ -2,8 +2,8 @@
 
 {% block content %}
 <div class="report-wrapper">
-    <h1 class="report-title">All Artists</h1>
-    <p class="report-date">📅 Date of the Report: {{ today }}</p>
+    <h1 class="report-title">🎨 Active Artists Report</h1>
+    <p class="report-date">📅 Report Generated: {{ today }}</p>
 
     <div class="table-container">
         <table class="report-table">
@@ -28,8 +28,8 @@
                     <td>{{ artist.usualtype }}</td>
                     <td>{{ artist.usualmedium }}</td>
                     <td>{{ artist.usualstyle }}</td>
-                    <td>{{ artist.saleslastyear }}</td>
-                    <td>{{ artist.salesyeartodate }}</td>
+                    <td>${{ '{:,.2f}'.format(artist.saleslastyear) if artist.saleslastyear else '0.00' }}</td>
+                    <td>${{ '{:,.2f}'.format(artist.salesyeartodate) if artist.salesyeartodate else '0.00' }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

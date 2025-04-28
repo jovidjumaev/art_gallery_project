@@ -1,0 +1,341 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="result-container">
+    <div class="result-header">
+        <h2>🎨 Artwork History</h2>
+        <div class="header-actions">
+            <a href="/artgalleryproject/form/find-artwork-history-form" class="btn-search">🔍 Search Another Artwork</a>
+            <a href="/artgalleryproject/form" class="btn-back">← Back to Forms</a>
+        </div>
+    </div>
+
+    {% if artwork %}
+    <div class="artwork-details">
+        <div class="section-header">
+            <h3>📋 Artwork Details</h3>
+        </div>
+        
+        <div class="details-grid">
+            <div class="detail-item">
+                <span class="detail-label">Artist ID</span>
+                <span class="detail-value">{{ artwork.artistid }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <span class="detail-label">Title</span>
+                <span class="detail-value">{{ artwork.worktitle }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <span class="detail-label">Year Completed</span>
+                <span class="detail-value">{{ artwork.workyearcompleted }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <span class="detail-label">Type</span>
+                <span class="detail-value">{{ artwork.worktype }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <span class="detail-label">Medium</span>
+                <span class="detail-value">{{ artwork.workmedium }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <span class="detail-label">Style</span>
+                <span class="detail-value">{{ artwork.workstyle }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <span class="detail-label">Size</span>
+                <span class="detail-value">{{ artwork.worksize }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <span class="detail-label">Asking Price</span>
+                <span class="detail-value">${{ artwork.askingprice if artwork.askingprice else 'Not set' }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <span class="detail-label">Date Listed</span>
+                <span class="detail-value">{{ artwork.datelisted.strftime('%Y-%m-%d') if artwork.datelisted else 'Not listed' }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <span class="detail-label">Date Returned</span>
+                <span class="detail-value">{{ artwork.datereturned.strftime('%Y-%m-%d') if artwork.datereturned else 'Still listed' }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <span class="detail-label">Status</span>
+                <span class="detail-value">{{ artwork.status|capitalize if artwork.status else 'Not set' }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="show-history">
+        <div class="section-header">
+            <h3>🎭 Show History</h3>
+        </div>
+        
+        {% if shows %}
+        <div class="history-list">
+            {% for show in shows %}
+            <div class="history-item">
+                <div class="history-date">{{ show.dateshown.strftime('%Y-%m-%d') if show.dateshown else 'No date' }}</div>
+                <div class="history-details">
+                    <h4>Show ID: {{ show.showid }}</h4>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-history">
+            <p>No show history available for this artwork.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="sale-information">
+        <div class="section-header">
+            <h3>💵 Sale Information</h3>
+        </div>
+        
+        {% if sale %}
+        <div class="sale-details">
+            <div class="sale-item">
+                <span class="sale-label">Sale Date</span>
+                <span class="sale-value">{{ sale.saledate.strftime('%Y-%m-%d') if sale.saledate else 'No date' }}</span>
+            </div>
+            <div class="sale-item">
+                <span class="sale-label">Sale Price</span>
+                <span class="sale-value">${{ sale.saleprice if sale.saleprice else 'Not set' }}</span>
+            </div>
+            <div class="sale-item">
+                <span class="sale-label">Amount Remitted to Owner</span>
+                <span class="sale-value">${{ sale.amountremittedtoowner if sale.amountremittedtoowner else 'Not set' }}</span>
+            </div>
+            <div class="sale-item">
+                <span class="sale-label">Buyer ID</span>
+                <span class="sale-value">{{ sale.buyerid if sale.buyerid else 'Not set' }}</span>
+            </div>
+            <div class="sale-item">
+                <span class="sale-label">Salesperson SSN</span>
+                <span class="sale-value">{{ sale.salespersonssn if sale.salespersonssn else 'Not set' }}</span>
+            </div>
+        </div>
+        {% else %}
+        <div class="no-sale">
+            <p>This artwork has not been sold yet.</p>
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="no-data">
+        <h3>No Artwork Found</h3>
+        <p>{{ no_data_message }}</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.result-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #f0f2f5;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.result-header h2 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-search, .btn-back {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-search {
+    background: #4CAF50;
+    color: white;
+}
+
+.btn-back {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-search:hover {
+    background: #45a049;
+}
+
+.btn-back:hover {
+    background: #5a6268;
+}
+
+.section-header {
+    margin-bottom: 1.5rem;
+}
+
+.section-header h3 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.artwork-details, .show-history, .sale-information {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.detail-label {
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.detail-value {
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.history-item {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.history-date {
+    min-width: 120px;
+    color: #666;
+    font-weight: 500;
+}
+
+.history-details h4 {
+    color: #2c3e50;
+    margin: 0 0 0.5rem 0;
+}
+
+.history-details p {
+    color: #666;
+    margin: 0;
+}
+
+.sale-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.sale-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.sale-label {
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.sale-value {
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.no-history, .no-sale, .no-data {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 6px;
+    color: #666;
+}
+
+.no-data h3 {
+    color: #dc3545;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .result-container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    .result-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .header-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-search, .btn-back {
+        width: 100%;
+        text-align: center;
+    }
+
+    .artwork-details, .show-history, .sale-information {
+        padding: 1.5rem;
+    }
+
+    .history-item {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .history-date {
+        min-width: auto;
+    }
+}
+</style>
+{% endblock %} 

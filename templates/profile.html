@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<div class="profile-container">
+<div class="profile-container fade-in">
     <h2 class="section-title">Profile Settings</h2>
     <p class="section-subtitle">Manage your account information and security settings</p>
 
@@ -98,6 +98,21 @@
 </div>
 
 <style>
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
 .profile-container {
     max-width: 800px;
     margin: 2rem auto;

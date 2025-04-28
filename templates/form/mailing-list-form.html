@@ -10,146 +10,412 @@
     </div>
 </div>
 {% else %}
-{{error}}
-<form method="POST" action="/artgalleryproject/form/add-mailing-list" novalidate>
-    <!-- Date Information -->
-    <div>
-        <h5>📅 Date</h5>
-        <div>
-            <label>Today's Date *</label>
-            <input type="date" name="signupDate" value="{{ today }}" max="{{ today }}" required>
-            <small>Cannot select future dates</small>
-        </div>
+<div class="form-container">
+    <div class="form-header">
+        <h2>📬 Join Our Mailing List</h2>
+        <p class="form-description">Please fill out the following information to join our gallery's mailing list.</p>
     </div>
 
-    <!-- Contact Information -->
-    <div>
-        <h5>👤 Contact Information</h5>
+    <form method="POST" action="/artgalleryproject/form/add-mailing-list" class="modern-form" novalidate>
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
 
-        <div>
-            <label>Last Name *</label>
-            <input type="text" name="lastName" required
-                   pattern="[A-Za-z]{1,15}" maxlength="15"
-                   title="Please enter up to 15 letters only">
+        <!-- Date Information -->
+        <div class="form-section">
+            <div class="section-header">
+                <h3>Date Information</h3>
+                <p class="section-description">When you're joining our mailing list.</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Today's Date *</label>
+                    <input type="date" name="signupDate" value="{{ today }}" max="{{ today }}" required>
+                    <small>Cannot select future dates</small>
+                </div>
+            </div>
         </div>
 
-        <div>
-            <label>First Name *</label>
-            <input type="text" name="firstName" required
-                   pattern="[A-Za-z]{1,15}" maxlength="15"
-                   title="Please enter up to 15 letters only">
+        <!-- Contact Information -->
+        <div class="form-section">
+            <div class="section-header">
+                <h3>Contact Information</h3>
+                <p class="section-description">Your basic contact details.</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Last Name *</label>
+                    <input type="text" name="lastName" required
+                           pattern="[A-Za-z]{1,15}" maxlength="15"
+                           title="Please enter up to 15 letters only">
+                    <small>Maximum 15 characters, letters only</small>
+                </div>
+
+                <div class="form-group">
+                    <label>First Name *</label>
+                    <input type="text" name="firstName" required
+                           pattern="[A-Za-z]{1,15}" maxlength="15"
+                           title="Please enter up to 15 letters only">
+                    <small>Maximum 15 characters, letters only</small>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Street *</label>
+                    <input type="text" name="street" required>
+                    <small>Your street address</small>
+                </div>
+
+                <div class="form-group">
+                    <label>City *</label>
+                    <input type="text" name="city" required>
+                    <small>Your city</small>
+                </div>
+
+                <div class="form-group">
+                    <label>State *</label>
+                    <input type="text" name="state" required
+                           pattern="[A-Z]{2}" maxlength="2"
+                           style="text-transform: uppercase;"
+                           oninput="this.value = this.value.toUpperCase()"
+                           title="Please enter a 2-letter state code in capitals (e.g., SC)">
+                    <small>2 capital letters (e.g., SC)</small>
+                </div>
+
+                <div class="form-group">
+                    <label>ZIP *</label>
+                    <input type="text" name="zip" required
+                           pattern="[0-9]{5}" maxlength="5"
+                           title="Please enter exactly 5 digits">
+                    <small>Exactly 5 digits</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Area Code *</label>
+                    <input type="text" name="areaCode" required
+                           pattern="[0-9]{3}" maxlength="3"
+                           title="Please enter exactly 3 digits">
+                    <small>Exactly 3 digits</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Telephone Number *</label>
+                    <input type="text" name="telephoneNumber" required
+                           pattern="[0-9]{7}" maxlength="7"
+                           title="Please enter exactly 7 digits">
+                    <small>Exactly 7 digits</small>
+                </div>
+            </div>
         </div>
 
-        <div>
-            <label>Street *</label>
-            <input type="text" name="street" required>
+        <!-- Art Preferences -->
+        <div class="form-section">
+            <div class="section-header">
+                <h3>Art Preferences</h3>
+                <p class="section-description">Tell us about your art preferences (all fields are optional).</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Preferred Artist First Name</label>
+                    <input type="text" name="preferredArtistFirstName"
+                           pattern="[A-Za-z]{0,15}" maxlength="15"
+                           placeholder="Enter artist's first name (optional)">
+                    <small>Maximum 15 characters, letters only</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Preferred Artist Last Name</label>
+                    <input type="text" name="preferredArtistLastName"
+                           pattern="[A-Za-z]{0,15}" maxlength="15"
+                           placeholder="Enter artist's last name (optional)">
+                    <small>Maximum 15 characters, letters only</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Preferred Type</label>
+                    <select name="preferredType" id="preferredType">
+                        <option value="">Select Type (Optional)</option>
+                        <option value="Painting">Painting</option>
+                        <option value="Sculpture">Sculpture</option>
+                        <option value="Photography">Photography</option>
+                        <option value="Digital Art">Digital Art</option>
+                        <option value="Mixed Media">Mixed Media</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <input type="text" id="otherType" name="otherType" placeholder="Please specify type" class="hidden">
+                    <small class="other-input-hint">Specify if not listed</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Preferred Medium</label>
+                    <select name="preferredMedium" id="preferredMedium">
+                        <option value="">Select Medium (Optional)</option>
+                        <option value="Oil">Oil</option>
+                        <option value="Acrylic">Acrylic</option>
+                        <option value="Watercolor">Watercolor</option>
+                        <option value="Bronze">Bronze</option>
+                        <option value="Marble">Marble</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <input type="text" id="otherMedium" name="otherMedium" placeholder="Please specify medium" class="hidden">
+                    <small class="other-input-hint">Specify if not listed</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Preferred Style</label>
+                    <select name="preferredStyle" id="preferredStyle">
+                        <option value="">Select Style (Optional)</option>
+                        <option value="Abstract">Abstract</option>
+                        <option value="Realism">Realism</option>
+                        <option value="Impressionism">Impressionism</option>
+                        <option value="Modern">Modern</option>
+                        <option value="Contemporary">Contemporary</option>
+                        <option value="Folk">Folk</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <input type="text" id="otherStyle" name="otherStyle" placeholder="Please specify style" class="hidden">
+                    <small class="other-input-hint">Specify if not listed</small>
+                </div>
+            </div>
         </div>
 
-        <div>
-            <label>City *</label>
-            <input type="text" name="city" required>
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Join Mailing List</button>
+            <a href="/artgalleryproject/form" class="btn-cancel">Cancel</a>
         </div>
-
-        <div>
-            <label>State *</label>
-            <input type="text" name="state" required
-                   pattern="[A-Z]{2}" maxlength="2"
-                   style="text-transform: uppercase;"
-                   oninput="this.value = this.value.toUpperCase()"
-                   title="Please enter a 2-letter state code in capitals (e.g., SC)">
-        </div>
-
-        <div>
-            <label>ZIP *</label>
-            <input type="text" name="zip" required
-                   pattern="[0-9]{5}" maxlength="5"
-                   title="Please enter exactly 5 digits">
-        </div>
-
-        <div>
-            <label>Area Code *</label>
-            <input type="text" name="areaCode" required
-                   pattern="[0-9]{3}" maxlength="3"
-                   title="Please enter exactly 3 digits">
-        </div>
-
-        <div>
-            <label>Telephone Number *</label>
-            <input type="text" name="telephoneNumber" required
-                   pattern="[0-9]{7}" maxlength="7"
-                   title="Please enter exactly 7 digits">
-        </div>
-    </div>
-
-    <!-- Art Preferences -->
-    <div>
-        <h5>❤️ Art Preferences</h5>
-        <p>All fields below are optional.</p>
-
-        <div>
-            <label>Preferred Artist First Name</label>
-            <input type="text" name="preferredArtistFirstName"
-                   pattern="[A-Za-z]{0,15}" maxlength="15"
-                   placeholder="Enter artist's first name (optional)">
-        </div>
-
-        <div>
-            <label>Preferred Artist Last Name</label>
-            <input type="text" name="preferredArtistLastName"
-                   pattern="[A-Za-z]{0,15}" maxlength="15"
-                   placeholder="Enter artist's last name (optional)">
-        </div>
-
-        <div>
-            <label>Preferred Type</label>
-            <select name="preferredType" id="preferredType">
-                <option value="">Select Type (Optional)</option>
-                <option value="Painting">Painting</option>
-                <option value="Sculpture">Sculpture</option>
-                <option value="Photography">Photography</option>
-                <option value="Digital Art">Digital Art</option>
-                <option value="Mixed Media">Mixed Media</option>
-                <option value="other">Other</option>
-            </select>
-            <input type="text" id="otherType" name="otherType" placeholder="Please specify type" style="display:none;">
-        </div>
-
-        <div>
-            <label>Preferred Medium</label>
-            <select name="preferredMedium" id="preferredMedium">
-                <option value="">Select Medium (Optional)</option>
-                <option value="Oil">Oil</option>
-                <option value="Acrylic">Acrylic</option>
-                <option value="Watercolor">Watercolor</option>
-                <option value="Bronze">Bronze</option>
-                <option value="Marble">Marble</option>
-                <option value="other">Other</option>
-            </select>
-            <input type="text" id="otherMedium" name="otherMedium" placeholder="Please specify medium" style="display:none;">
-        </div>
-
-        <div>
-            <label>Preferred Style</label>
-            <select name="preferredStyle" id="preferredStyle">
-                <option value="">Select Style (Optional)</option>
-                <option value="Abstract">Abstract</option>
-                <option value="Realism">Realism</option>
-                <option value="Impressionism">Impressionism</option>
-                <option value="Modern">Modern</option>
-                <option value="Contemporary">Contemporary</option>
-                <option value="Folk">Folk</option>
-                <option value="other">Other</option>
-            </select>
-            <input type="text" id="otherStyle" name="otherStyle" placeholder="Please specify style" style="display:none;">
-        </div>
-    </div>
-
-    <div>
-        <a href="/artgalleryproject/form">Cancel</a>
-        <button type="submit">Join Mailing List</button>
-    </div>
-
-</form>
+    </form>
+</div>
 {% endif %}
 
+<style>
+.form-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #f0f2f5;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-header h2 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-description {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.form-section {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    margin-bottom: 1.5rem;
+}
+
+.section-header h3 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.section-description {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    outline: none;
+}
+
+small {
+    display: block;
+    color: #666;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.other-input-hint {
+    display: none;
+    color: #666;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.other-input-hint.visible {
+    display: block;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.btn-submit, .btn-cancel {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit {
+    background: #4CAF50;
+    color: white;
+    border: none;
+}
+
+.btn-cancel {
+    background: #6c757d;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-submit:hover {
+    background: #45a049;
+}
+
+.btn-cancel:hover {
+    background: #5a6268;
+}
+
+.success-message {
+    text-align: center;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+.success-message h2 {
+    color: #28a745;
+    margin-bottom: 1.5rem;
+}
+
+.success-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .form-container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    .form-section {
+        padding: 1.5rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-submit, .btn-cancel {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Show/hide "Other" input fields
+    const typeSelect = document.getElementById('preferredType');
+    const mediumSelect = document.getElementById('preferredMedium');
+    const styleSelect = document.getElementById('preferredStyle');
+    
+    const otherTypeInput = document.getElementById('otherType');
+    const otherMediumInput = document.getElementById('otherMedium');
+    const otherStyleInput = document.getElementById('otherStyle');
+
+    const otherTypeHint = otherTypeInput.nextElementSibling;
+    const otherMediumHint = otherMediumInput.nextElementSibling;
+    const otherStyleHint = otherStyleInput.nextElementSibling;
+
+    function toggleOtherInput(select, input, hint) {
+        if (select.value === 'other') {
+            input.classList.remove('hidden');
+            hint.classList.add('visible');
+        } else {
+            input.classList.add('hidden');
+            hint.classList.remove('visible');
+        }
+    }
+
+    typeSelect.addEventListener('change', () => toggleOtherInput(typeSelect, otherTypeInput, otherTypeHint));
+    mediumSelect.addEventListener('change', () => toggleOtherInput(mediumSelect, otherMediumInput, otherMediumHint));
+    styleSelect.addEventListener('change', () => toggleOtherInput(styleSelect, otherStyleInput, otherStyleHint));
+});
+</script>
 {% endblock %}
