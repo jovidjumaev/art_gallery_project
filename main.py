@@ -7,6 +7,7 @@ from datetime import date
 from collections import namedtuple
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+
 from models.artist import Artist
 from models.collector import Collector
 from models.artwork import Artwork
@@ -15,6 +16,7 @@ from database.database import SessionLocal
 
 from routes.report import router as report_router
 from routes.form import router as form_router
+from routes.auth import router as auth_router
 
 
 # Sub-application
@@ -32,11 +34,14 @@ def read_artists(request: Request):
 async def not_found(request: Request, exc: StarletteHTTPException):
     return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
 
-
+@gallery_app.get('/about', response_class=HTMLResponse)
+def about_me(request: Request): 
+    return templates.TemplateResponse("about.html", {"request": request})
 
 # Include additional routers
 gallery_app.include_router(report_router)
 gallery_app.include_router(form_router)
+gallery_app.include_router(auth_router)
 
 
 # Main application

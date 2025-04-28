@@ -5,9 +5,15 @@
   <h1>🎨 Find a Work of Art for a Customer</h1>
 
   <form method="POST" action="/artgalleryproject/form/get-filter" class="artwork-search-form">
+    
     <div class="form-group">
-      <label for="artist_name">Artist Name</label>
-      <input type="text" id="artist_name" name="artist_name" placeholder="Enter artist name">
+      <label for="artist_firstname">Artist First Name</label>
+      <input type="text" id="artist_firstname" name="artist_firstname" placeholder="Enter artist first name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="artist_lastname">Artist Last Name</label>
+      <input type="text" id="artist_lastname" name="artist_lastname" placeholder="Enter artist last name" required>
     </div>
 
     <div class="form-group">
@@ -55,8 +61,10 @@
     <div class="form-group">
       <button type="submit" class="submit-button">Search Artwork</button>
     </div>
+
   </form>
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
       function handleSelectChange(selectId, inputId) {
@@ -79,6 +87,5 @@
       handleSelectChange('medium', 'otherMedium');
       handleSelectChange('style', 'otherStyle');
     });
-    </script>
-    
+</script>
 {% endblock %}

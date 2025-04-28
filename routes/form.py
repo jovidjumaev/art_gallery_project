@@ -7,6 +7,7 @@ from oracledb import DataError, IntegrityError
 from datetime import datetime
 
 import oracledb
+from sqlalchemy import func
 from sqlalchemy.orm import Session 
 from database.database import SessionLocal
 from schema.artist_schema import ArtistRequest
@@ -566,7 +567,8 @@ def find_artwork(request: Request):
 @router.post("/get-filter", response_class=HTMLResponse)
 async def get_filtered_artworks(
     request: Request,
-    artist_name: Optional[str] = Form(None),
+    artist_firstname: Optional[str] = Form(None),
+    artist_lastname: Optional[str] = Form(None),
     type: Optional[str] = Form(None),
     otherType: Optional[str] = Form(None),
     medium: Optional[str] = Form(None),
@@ -575,6 +577,12 @@ async def get_filtered_artworks(
     otherStyle: Optional[str] = Form(None),
     db: Session = Depends(get_db)
 ):
+
+    # If all fields are empty, redirect back to the form
+    if not any([artist_firstname,artist_lastname, type, otherType, medium, otherMedium, style, otherStyle]):
+        return RedirectResponse(url=request.url_for('form_page_route_name'), status_code=303)
+        # Replace 'form_page_route_name' with your form's GET route name!
+
     # Prefer 'Other' inputs if they exist
     final_type = otherType if type == "Other" and otherType else type
     final_medium = otherMedium if medium == "Other" and otherMedium else medium
@@ -582,15 +590,20 @@ async def get_filtered_artworks(
 
     query = db.query(Artwork).join(Artist)
 
-    # Always filter only "for sale"
+    # Always filter artworks that are "for sale"
     query = query.filter(Artwork.status == "for sale")
 
-    # Apply additional filters only if values are provided
-    if artist_name:
+    # Apply artist strict matching
+    if artist_firstname and artist_lastname:
+        trimmed_firstname = func.trim(Artist.firstname)
+        trimmed_lastname = func.trim(Artist.lastname)
+
         query = query.filter(
-            (Artist.firstname.ilike(f"%{artist_name}%")) |
-            (Artist.lastname.ilike(f"%{artist_name}%"))
+            func.lower(trimmed_firstname) == artist_firstname.strip().lower(),
+            func.lower(trimmed_lastname) == artist_lastname.strip().lower()
         )
+
+    # Apply additional filters
     if final_type:
         query = query.filter(Artwork.worktype.ilike(f"%{final_type}%"))
     if final_medium:
@@ -611,55 +624,52 @@ async def get_filtered_artworks(
 async def show_find_artwork_history_form(request: Request):
     return templates.TemplateResponse("find_artwork_history_form.html", {"request": request})
 
+
 @router.post("/find-artwork-history", response_class=HTMLResponse)
 async def find_artwork_history(
     request: Request,
-    artist_name: str = Form(...),
+    artist_firstname: str = Form(...),
+    artist_lastname: str = Form(...),
     artwork_title: str = Form(...),
     db: Session = Depends(get_db)
 ):
-    # Split artist name into first and last
-    name_parts = artist_name.strip().split(" ", 1)
-    artist_firstname = name_parts[0]
-    artist_lastname = name_parts[1] if len(name_parts) > 1 else ""
+    # Redirect if any field is missing
+    if not artist_firstname.strip() or not artist_lastname.strip() or not artwork_title.strip():
+        return RedirectResponse(url="/artgalleryproject/find-artwork-history-form", status_code=303)
 
-    # If the form was not filled (empty POST), redirect to form
-    if not artist_name or not artwork_title:
-        return RedirectResponse(url="/artgalleryproject/form/find-artwork-history-form", status_code=303)
-    # Find the artwork by artist name and artwork title
-    
+    # Clean user input
+    artist_firstname_cleaned = artist_firstname.strip().lower()
+    artist_lastname_cleaned = artist_lastname.strip().lower()
+    artwork_title_cleaned = artwork_title.strip()
+
+    # Trim the database fields
+    trimmed_firstname = func.trim(Artist.firstname)
+    trimmed_lastname = func.trim(Artist.lastname)
+
+    # Search
     artwork = (
         db.query(Artwork)
         .join(Artist, Artwork.artistid == Artist.artistid)
         .filter(
-            Artwork.worktitle.ilike(f"%{artwork_title}%"),
-            Artist.firstname.ilike(f"%{artist_firstname}%"),
-            Artist.lastname.ilike(f"%{artist_lastname}%")
+            Artwork.worktitle.ilike(f"%{artwork_title_cleaned}%"),
+            func.lower(trimmed_firstname) == artist_firstname_cleaned,
+            func.lower(trimmed_lastname) == artist_lastname_cleaned
         )
         .first()
     )
 
-    if not artwork:
-        message = "No matching artwork found."
-        return templates.TemplateResponse("no_data.html", {"request": request, "message": message})
+    # Get shows and sale info anyway (empty if artwork not found)
+    shows = []
+    sale = None
 
-    # Find shows the artwork appeared in
-    shows = (
-        db.query(ShownIn)
-        .filter(ShownIn.artworkid == artwork.artworkid)
-        .all()
-    )
-
-    # Find sale information if it was sold
-    sale = (
-        db.query(Sale)
-        .filter(Sale.artworkid == artwork.artworkid)
-        .first()
-    )
+    if artwork:
+        shows = db.query(ShownIn).filter(ShownIn.artworkid == artwork.artworkid).all()
+        sale = db.query(Sale).filter(Sale.artworkid == artwork.artworkid).first()
 
     return templates.TemplateResponse("artwork_history.html", {
         "request": request,
         "artwork": artwork,
         "shows": shows,
-        "sale": sale
+        "sale": sale,
+        "no_data_message": "No matching artwork found." if not artwork else None
     })
