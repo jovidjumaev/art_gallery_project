@@ -2,16 +2,16 @@
 
 {% block content %}
 <div class="report-wrapper">
+  <h1>🎨 Filtered Artworks</h1>
 
-  <h1 class="section-title">🎨 All Artists' Artworks</h1>
-
-  {% if artworks %}
   <div class="table-container">
     <table class="report-table">
       <thead>
         <tr>
-          <th>Artist</th>
           <th>Title</th>
+          <th>Type</th>
+          <th>Medium</th>
+          <th>Style</th>
           <th>Asking Price</th>
           <th>Status</th>
         </tr>
@@ -19,8 +19,10 @@
       <tbody>
         {% for artwork in artworks %}
         <tr>
-          <td>{{ artwork.artist_firstname }} {{ artwork.artist_lastname }}</td>
-          <td>{{ artwork.title }}</td>
+          <td>{{ artwork.worktitle }}</td>
+          <td>{{ artwork.worktype }}</td>
+          <td>{{ artwork.workmedium }}</td>
+          <td>{{ artwork.workstyle }}</td>
           <td>${{ artwork.askingprice }}</td>
           <td>{{ artwork.status }}</td>
         </tr>
@@ -28,11 +30,5 @@
       </tbody>
     </table>
   </div>
-  {% else %}
-  <div class="no-data-message">
-    <p>No artworks available at the moment. 🎨</p>
-  </div>
-  {% endif %}
-
 </div>
 {% endblock %}

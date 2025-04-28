@@ -1,4 +1,5 @@
 from decimal import ROUND_HALF_UP, Decimal
+from typing import Optional
 from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -558,3 +559,49 @@ async def add_mailing_list(
             "request": request,
             "error": f"❌ Unexpected Error: {str(e)}"
         })
+
+@router.get('/find-artwork',response_class=HTMLResponse )
+def find_artwork(request: Request):
+    return templates.TemplateResponse("/form/find-artwork.html", {"request": request})
+@router.post("/get-filter", response_class=HTMLResponse)
+async def get_filtered_artworks(
+    request: Request,
+    artist_name: Optional[str] = Form(None),
+    type: Optional[str] = Form(None),
+    otherType: Optional[str] = Form(None),
+    medium: Optional[str] = Form(None),
+    otherMedium: Optional[str] = Form(None),
+    style: Optional[str] = Form(None),
+    otherStyle: Optional[str] = Form(None),
+    db: Session = Depends(get_db)
+):
+    # Prefer 'Other' inputs if they exist
+    final_type = otherType if type == "Other" and otherType else type
+    final_medium = otherMedium if medium == "Other" and otherMedium else medium
+    final_style = otherStyle if style == "Other" and otherStyle else style
+
+    query = db.query(Artwork).join(Artist)
+
+    # Always filter only "for sale"
+    query = query.filter(Artwork.status == "for sale")
+
+    # Apply additional filters only if values are provided
+    if artist_name:
+        query = query.filter(
+            (Artist.firstname.ilike(f"%{artist_name}%")) |
+            (Artist.lastname.ilike(f"%{artist_name}%"))
+        )
+    if final_type:
+        query = query.filter(Artwork.worktype.ilike(f"%{final_type}%"))
+    if final_medium:
+        query = query.filter(Artwork.workmedium.ilike(f"%{final_medium}%"))
+    if final_style:
+        query = query.filter(Artwork.workstyle.ilike(f"%{final_style}%"))
+
+    artworks = query.all()
+
+    if not artworks:
+        message = "No artworks found matching your criteria."
+        return templates.TemplateResponse("no_data.html", {"request": request, "message": message})
+
+    return templates.TemplateResponse("filtered_artworks.html", {"request": request, "artworks": artworks})

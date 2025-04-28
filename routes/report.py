@@ -242,8 +242,8 @@ def get_sale_this_week(request: Request, db: Session = Depends(get_db)):
         .join(Artwork, Sale.artworkid == Artwork.artworkid)
         .join(Artist, Artwork.artistid == Artist.artistid)
         .join(Buyer, Sale.buyerid == Buyer.buyerid)
-        .join(Collector, Artwork.collectorsocialsecuritynumber == Collector.socialsecuritynumber)
         .filter(Sale.saledate.between(start_of_week, end_of_week))
+        .outerjoin(Collector, Artwork.collectorsocialsecuritynumber == Collector.socialsecuritynumber)
         .order_by(Salesperson.lastname, Salesperson.firstname)
         .all()
     )
@@ -302,7 +302,7 @@ def get_aged_artworks(request: Request, db: Session = Depends(get_db)):
             Artwork.askingprice.label("asking_price")
         )
         .join(Artist, Artwork.artistid == Artist.artistid)
-        .join(Collector, Artwork.collectorsocialsecuritynumber == Collector.socialsecuritynumber)
+        .outerjoin(Collector, Artwork.collectorsocialsecuritynumber == Collector.socialsecuritynumber)
         .filter(
             Artwork.status == 'for sale',
             Artwork.datelisted <= six_months_ago

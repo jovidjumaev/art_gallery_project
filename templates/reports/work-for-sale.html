@@ -1,38 +1,40 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<h1>Work For Sale</h1>
-<table border="1">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Artist </th>
-        <th>Type</th>
-        <th>Medium</th>
-        <th>Style</th>
-        <th>Owner's name</th>
-        <th>Asking Price</th>
-        <th>Date's Shown</th>
-        <th>Date's List</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for r in results %}
-      <tr>
-        <td>{{ r.worktitle }}</td>
-        <td>{{ r.artist_firstname}} {{r.artist_lastname}}</td>
-        <td>{{ r.worktype }}</td>
-        <td>{{ r.workmedium }}</td>
-        <td>{{ r.workstyle }}</td>
-        <td>{{ r.artist_firstname}} {{r.artist_lastname}}{{ r.owner_firstname}} {{r.owner_lastname}}</td>
-        <td>{{ r.askingprice }}</td>
-        <td>{{ r.dateshown }}</td>
-        <td>{{ r.datelisted }}</td>
-      
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
- 
-  
+<div class="report-wrapper">
+  <h1 class="section-title">🖌️ Works For Sale</h1>
+
+  <div class="table-container">
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Artist</th>
+          <th>Type</th>
+          <th>Medium</th>
+          <th>Style</th>
+          <th>Owner's Name</th>
+          <th>Asking Price</th>
+          <th>Date Shown</th>
+          <th>Date Listed</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in results %}
+        <tr>
+          <td>{{ r.worktitle }}</td>
+          <td>{{ r.artist_firstname }} {{ r.artist_lastname }}</td>
+          <td>{{ r.worktype }}</td>
+          <td>{{ r.workmedium }}</td>
+          <td>{{ r.workstyle }}</td>
+          <td>{{ r.owner_firstname }} {{ r.owner_lastname }}</td>
+          <td>${{ r.askingprice }}</td>
+          <td>{{ r.dateshown }}</td>
+          <td>{{ r.datelisted }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

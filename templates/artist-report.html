@@ -1,109 +1,120 @@
 {% extends 'index.html' %}
+
 {% block content %}
-<h1>Works Sold:</h1>
-<table border="1">
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Artist</th>
-      <th>Date Listed</th>
-      <th>Type</th>
-      <th>Medium</th>
-      <th>Style</th>
-      <th>Year</th>
-      <th>Asking Price</th>
-      <th>Sell Price</th>
-      <th>Date Sold</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for sw in sold_works %}
-    <tr>
-      <td>{{ sw.worktitle }}</td>
-      <td>{{ artist_id }}</td>
-      <td>{{ sw.datelisted }}</td>
-      <td>{{ sw.worktype }}</td>
-      <td>{{ sw.workmedium }}</td>
-      <td>{{ sw.workstyle }}</td>
-      <td>{{ sw.workyearcompleted }}</td>
-      <td>{{ sw.askingprice }}</td>
-      <td>{{ sw.saleprice }}</td>
-      <td>{{ sw.saledate }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-<h2>Total of Sales: {{ total_sales }}</h2>
+<div class="report-wrapper">
 
-<h1>Worked Returned</h1>
-<table border="1">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Artist</th>
-        <th>Date Listed</th>
-        <th>Type</th>
-        <th>Medium</th>
-        <th>Style</th>
-        <th>Year</th>
-        <th>Asking Price</th>
-        <th>Date Returned</th>
-       
-      </tr>
-    </thead>
-    <tbody>
-      {% for rw in returned_works %}
-      <tr>
-        <td>{{ rw.worktitle }}</td>
-        <td>{{ artist_id }}</td>
-        <td>{{ rw.datelisted }}</td>
-        <td>{{ rw.worktype }}</td>
-        <td>{{ rw.workmedium }}</td>
-        <td>{{ rw.workstyle }}</td>
-        <td>{{ rw.workyearcompleted }}</td>
-        <td>{{ rw.askingprice }}</td>
-        <td>{{ rw.datereturned }}</td>
-        
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
- 
+  <!-- Works Sold Section -->
+  <section class="report-section">
+    <h1 class="section-title">🎨 Works Sold</h1>
+    <div class="table-container">
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Date Listed</th>
+            <th>Type</th>
+            <th>Medium</th>
+            <th>Style</th>
+            <th>Year</th>
+            <th>Asking Price</th>
+            <th>Sell Price</th>
+            <th>Date Sold</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sw in sold_works %}
+          <tr>
+            <td>{{ sw.worktitle }}</td>
+            <td>{{ sw.artist_firstname }} {{ sw.artist_lastname }}</td>
+            <td>{{ sw.datelisted }}</td>
+            <td>{{ sw.worktype }}</td>
+            <td>{{ sw.workmedium }}</td>
+            <td>{{ sw.workstyle }}</td>
+            <td>{{ sw.workyearcompleted }}</td>
+            <td>${{ sw.askingprice }}</td>
+            <td>${{ sw.saleprice }}</td>
+            <td>{{ sw.saledate }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <h2 class="summary-text">🧾 Total Sales: <span class="summary-number">${{ total_sales }}</span></h2>
+  </section>
 
-  <h1>Artwork For Sale</h1>
-<table border="1">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Artist</th>
-        <th>Date Listed</th>
-        <th>Type</th>
-        <th>Medium</th>
-        <th>Style</th>
-        <th>Year</th>
-        <th>Asking Price</th>
-     
-       
-      </tr>
-    </thead>
-    <tbody>
-      {% for fsw in forSale_works %}
-      <tr>
-        <td>{{ fsw.worktitle }}</td>
-        <td>{{ artist_id }}</td>
-        <td>{{ fsw.datelisted }}</td>
-        <td>{{ fsw.worktype }}</td>
-        <td>{{ fsw.workmedium }}</td>
-        <td>{{ fsw.workstyle }}</td>
-        <td>{{ fsw.workyearcompleted }}</td>
-        <td>{{ fsw.askingprice }}</td>
-     
-        
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <h2>Total of Asking Prices: {{ total_asking_price }}</h2>
+  <!-- Works Returned Section -->
+  <section class="report-section">
+    <h1 class="section-title">🖼️ Works Returned</h1>
+    <div class="table-container">
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Date Listed</th>
+            <th>Type</th>
+            <th>Medium</th>
+            <th>Style</th>
+            <th>Year</th>
+            <th>Asking Price</th>
+            <th>Date Returned</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rw in returned_works %}
+          <tr>
+            <td>{{ rw.worktitle }}</td>
+            <td>{{ rw.artist_firstname }} {{ rw.artist_lastname }}</td>
+            <td>{{ rw.datelisted }}</td>
+            <td>{{ rw.worktype }}</td>
+            <td>{{ rw.workmedium }}</td>
+            <td>{{ rw.workstyle }}</td>
+            <td>{{ rw.workyearcompleted }}</td>
+            <td>${{ rw.askingprice }}</td>
+            <td>{{ rw.datereturned }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
 
+  <!-- Artwork for Sale Section -->
+  <section class="report-section">
+    <h1 class="section-title">🛒 Artwork For Sale</h1>
+    <div class="table-container">
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Date Listed</th>
+            <th>Type</th>
+            <th>Medium</th>
+            <th>Style</th>
+            <th>Year</th>
+            <th>Asking Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for fsw in forSale_works %}
+          <tr>
+            <td>{{ fsw.worktitle }}</td>
+            <td>{{ fsw.artist_firstname }} {{ fsw.artist_lastname }}</td>
+            <td>{{ fsw.datelisted }}</td>
+            <td>{{ fsw.worktype }}</td>
+            <td>{{ fsw.workmedium }}</td>
+            <td>{{ fsw.workstyle }}</td>
+            <td>{{ fsw.workyearcompleted }}</td>
+            <td>${{ fsw.askingprice }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <h2 class="summary-text">💰 Total Asking Prices: <span class="summary-number">${{ total_asking_price }}</span></h2>
+  </section>
 
+</div>
 {% endblock %}

@@ -1,26 +1,38 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<h1>{{show_title}}</h1>
+<div class="report-wrapper">
 
-<table border="1">
-    <tr>
-        <th>Title of Show</th>
-        <th>Opening Date</th>
-        <th>Closing Date</th>
-        <th>Feature Artist/th>
-        <th>Theme</th>
-    </tr>
-    {% for show in shows %}
-    <tr>
-        <td><a href="/artgalleryproject/report/show-artworks/{{ show.show_title | urlencode }}">
-            {{ show.show_title }}
-          </a></td>
-        <td>{{ show.opening_date }}</td>
-        <td>{{ show.closing_date }}</td>
-        <td>{{ show.featured_artist_firstname }} {{ show.featured_artist_lastname }}</td>
-        <td>{{ show.theme}}</td>
-    </tr>
-    {% endfor %}
-</table>
+  <h1 class="section-title">{{ show_title }}</h1>
+
+  <div class="table-container">
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>Title of Show</th>
+          <th>Opening Date</th>
+          <th>Closing Date</th>
+          <th>Featured Artist</th>
+          <th>Theme</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for show in shows %}
+        <tr>
+          <td>
+            <a href="/artgalleryproject/report/show-artworks/{{ show.show_title | urlencode }}" class="show-link">
+              {{ show.show_title }}
+            </a>
+          </td>
+          <td>{{ show.opening_date }}</td>
+          <td>{{ show.closing_date }}</td>
+          <td>{{ show.featured_artist_firstname }} {{ show.featured_artist_lastname }}</td>
+          <td>{{ show.theme }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
 {% endblock %}

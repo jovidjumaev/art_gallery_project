@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from datetime import date
 from collections import namedtuple
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from models.artist import Artist
 from models.collector import Collector
@@ -26,6 +27,10 @@ templates = Jinja2Templates(directory="templates")
 @gallery_app.get("/", response_class=HTMLResponse)
 def read_artists(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
+
+@gallery_app.exception_handler(404)
+async def not_found(request: Request, exc: StarletteHTTPException):
+    return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
 
 
 

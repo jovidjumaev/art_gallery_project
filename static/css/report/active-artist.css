@@ -1,0 +1,67 @@
+.report-wrapper {
+    padding: 30px;
+    max-width: 1200px;
+    margin: auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.report-title {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.report-date {
+    text-align: center;
+    font-size: 1.2em;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fdfdfd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.report-table th, .report-table td {
+    padding: 14px 16px;
+    text-align: center;
+}
+
+.report-table thead {
+    background-color: #4f6d7a;
+    color: #ffffff;
+}
+
+.report-table th {
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.report-table tbody tr:nth-child(even) {
+    background-color: #f2f6f8;
+}
+
+.report-table tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.report-table tbody tr:hover {
+    background-color: #dbe9f4;
+    cursor: pointer;
+}
+
+.report-table td {
+    color: #555;
+    font-size: 0.95em;
+}

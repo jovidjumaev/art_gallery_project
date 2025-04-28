@@ -1,38 +1,38 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<h1>Work for Sale Report</h1>
-<table border="1">
+<div class="report-wrapper">
+  <h1 class="report-title">🖼️ Collector Summary Report</h1>
+
+  <table class="report-table">
     <thead>
       <tr>
         <th>Collector Name</th>
         <th>Address</th>
         <th>Phone</th>
-        <th>Pref Artist</th>
-        <th>Pref Type</th>
-        <th>Pref Medium</th>
-        <th>Pref Style</th>
+        <th>Preferred Artist</th>
+        <th>Preferred Type</th>
+        <th>Preferred Medium</th>
+        <th>Preferred Style</th>
         <th>Sales Last Year</th>
         <th>Sales YTD</th>
       </tr>
     </thead>
     <tbody>
-      {% for collector in collectors%}
+      {% for collector in collectors %}
       <tr>
         <td>{{ collector.collector_firstname }} {{ collector.collector_lastname }}</td>
-        <td>{{ collector.street}},{{collector.zip}}</td>
+        <td>{{ collector.street }}, {{ collector.zip }}</td>
         <td>{{ collector.phone }}</td>
-        <td>{{ collector.preferred_artist}}</td>
+        <td>{{ collector.preferred_artist }}</td>
         <td>{{ collector.preferred_type }}</td>
-    
-        <td>{{ collector.preferred_medium}}</td>
+        <td>{{ collector.preferred_medium }}</td>
         <td>{{ collector.preferred_style }}</td>
         <td>{{ collector.sales_last_year }}</td>
-        <td>{{ collector.sales_ytd}}</td>
-      
+        <td>{{ collector.sales_ytd }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-  
+</div>
 {% endblock %}
