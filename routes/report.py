@@ -140,8 +140,8 @@ def work_for_sale(
             Artwork.datelisted
         )
         .join(Artist, Artwork.artistid == Artist.artistid)
-        .outerjoin(Collector, Artwork.collectorsocialsecuritynumber == Collector.socialsecuritynumber)  # <<< OUTER JOIN
-        .filter(Artwork.status == 'for sale')
+        .outerjoin(Collector, Artwork.collectorsocialsecuritynumber == Collector.socialsecuritynumber)
+        .filter(func.lower(Artwork.status).in_(['for sale', 'For Sale']))  # Case-insensitive status check
         .all()
     )
 
