@@ -788,20 +788,19 @@ async def get_filtered_artworks(
     final_style = otherStyle if style == "Other" and otherStyle else style
 
     query = db.query(Artwork).join(Artist)
-    query = query.filter(Artwork.status == "for sale")
 
-    # Apply artist name filters
+    # Apply artist name filters with case-insensitive search
     query = query.filter(
-        Artist.firstname.ilike(f"%{artist_firstname.strip()}%"),
-        Artist.lastname.ilike(f"%{artist_lastname.strip()}%")
+        func.lower(Artist.firstname).like(f"%{artist_firstname.strip().lower()}%"),
+        func.lower(Artist.lastname).like(f"%{artist_lastname.strip().lower()}%")
     )
 
     if final_type:
-        query = query.filter(Artwork.worktype.ilike(f"%{final_type}%"))
+        query = query.filter(func.lower(Artwork.worktype).like(f"%{final_type.lower()}%"))
     if final_medium:
-        query = query.filter(Artwork.workmedium.ilike(f"%{final_medium}%"))
+        query = query.filter(func.lower(Artwork.workmedium).like(f"%{final_medium.lower()}%"))
     if final_style:
-        query = query.filter(Artwork.workstyle.ilike(f"%{final_style}%"))
+        query = query.filter(func.lower(Artwork.workstyle).like(f"%{final_style.lower()}%"))
 
     artworks = query.all()
 
