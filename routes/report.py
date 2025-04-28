@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 from datetime import date, timedelta
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, HTMLResponse
 
 from models.artist import Artist
 from models.collector import Collector
@@ -262,49 +262,78 @@ def get_sale_this_week(request: Request, db: Session = Depends(get_db)):
         "grand_total_commission": grand_total_commission
     })
 
-@router.get("/aged-artworks")
-def get_aged_artworks(request: Request, db: Session = Depends(get_db)):
+@router.get("/aged-artworks", response_class=HTMLResponse)
+async def get_aged_artworks(request: Request, db: Session = Depends(get_db)):
     today = date.today()
-    six_months_ago = today - timedelta(days=6*30)  # rough approximation
+    six_months_ago = today - timedelta(days=6*30)
     formatted_date = today.strftime("%m/%d/%Y")
-
-    raw_results = (
+    
+    # Updated query with correct column names and join conditions
+    results = (
         db.query(
-            Collector.firstname.label("collector_firstname"),
-            Collector.lastname.label("collector_lastname"),
-            Collector.areacode.label("area_code"),
-            Collector.telephonenumber.label("collector_phone"),
+            Artwork.artworkid,
+            Artwork.worktitle,
+            Artwork.askingprice,
+            Artwork.datelisted,
             Artist.firstname.label("artist_firstname"),
             Artist.lastname.label("artist_lastname"),
-            Artwork.worktitle.label("work_title"),
-            Artwork.datelisted.label("date_listed"),
-            Artwork.askingprice.label("asking_price")
+            Collector.firstname.label("collector_firstname"),
+            Collector.lastname.label("collector_lastname"),
+            Collector.areacode,
+            Collector.telephonenumber.label("phonenumber")  # Fixed column name
         )
-        .join(Artist, Artwork.artistid == Artist.artistid)
-        .outerjoin(Collector, Artwork.collectorsocialsecuritynumber == Collector.socialsecuritynumber)  # <-- CHANGE
+        .join(Artist, Artist.artistid == Artwork.artistid)
+        .outerjoin(Collector, Collector.socialsecuritynumber == Artwork.collectorsocialsecuritynumber)
         .filter(
-            Artwork.status == 'for sale',
+            func.lower(Artwork.status) == 'for sale',
+            Artwork.datelisted.isnot(None),
             Artwork.datelisted <= six_months_ago
         )
-        .order_by(Collector.lastname, Collector.firstname, Artwork.datelisted)
         .all()
     )
+    
+    # Convert results to named tuples for template
+    AgedArtwork = namedtuple(
+        "AgedArtwork",
+        [
+            "artworkid",
+            "work_title",  # Renamed to match template
+            "asking_price",  # Renamed to match template
+            "date_listed",  # Renamed to match template
+            "artist_firstname",
+            "artist_lastname",
+            "collector_firstname",
+            "collector_lastname",
+            "area_code",  # Renamed to match template
+            "collector_phone"  # Renamed to match template
+        ],
+    )
+    
+    aged_artworks = [
+        AgedArtwork(
+            artworkid=r.artworkid,
+            work_title=r.worktitle,
+            asking_price=r.askingprice,
+            date_listed=r.datelisted,
+            artist_firstname=r.artist_firstname,
+            artist_lastname=r.artist_lastname,
+            collector_firstname=r.collector_firstname,
+            collector_lastname=r.collector_lastname,
+            area_code=r.areacode,
+            collector_phone=r.phonenumber
+        ) for r in results
+    ]
+    
+    return templates.TemplateResponse(
+        "reports/aged-artworks.html",
+        {
+            "request": request,
+            "aged_artworks": aged_artworks,
+            "todayDate": formatted_date,
+            "six_months_ago": six_months_ago,
+        },
+    )
 
-    AgedArtwork = namedtuple("AgedArtwork", [
-        "collector_firstname", "collector_lastname",
-        "area_code", "collector_phone",
-        "artist_firstname", "artist_lastname",
-        "work_title", "date_listed", "asking_price"
-    ])
-
-    aged_artworks = [AgedArtwork(*row) for row in raw_results]
-
-    return templates.TemplateResponse("/reports/aged-artworks.html", {
-        "request": request,
-        "aged_artworks": aged_artworks,
-        "cutoff_date": six_months_ago,
-        "todayDate": formatted_date
-    })
 @router.get("/show-details")
 def get_show_details(
     request: Request,
@@ -514,7 +543,7 @@ def individual_collector_sale_report(
     start_date: str = Form(...),
     end_date: str = Form(...)
 ):
-    # 🔥 Clean buyer ID
+    # Clean buyer ID
     buyer_id = collector_id.strip()
 
     try:
@@ -523,16 +552,17 @@ def individual_collector_sale_report(
     except ValueError:
         return RedirectResponse(url="/artgalleryproject/report/individual-collector-sale", status_code=303)
 
-    # 🔥 Fetch collector info
+    # Fetch collector info
     collector = db.query(Collector).filter(Collector.socialsecuritynumber == buyer_id).first()
     if not collector:
         return RedirectResponse(url="/artgalleryproject/report/individual-collector-sale", status_code=303)
 
-    # === Work Sold (filter by Artwork.dateListed) ===
+    # === Work Sold (filter by Sale.saledate) ===
     sold_works_raw = (
         db.query(
             Artwork.worktitle,
-            Artwork.artistid,
+            Artist.firstname.label("artist_firstname"),
+            Artist.lastname.label("artist_lastname"),
             Artwork.datelisted,
             Artwork.worktype,
             Artwork.workmedium,
@@ -543,32 +573,36 @@ def individual_collector_sale_report(
             Sale.saledate
         )
         .join(Sale, Artwork.artworkid == Sale.artworkid)
+        .join(Artist, Artwork.artistid == Artist.artistid)
         .filter(Artwork.collectorsocialsecuritynumber == buyer_id)
-        .filter(Artwork.datelisted >= start_date_obj)  # ✅ correct: dateListed
-        .filter(Artwork.datelisted <= end_date_obj)
+        .filter(Sale.saledate >= start_date_obj)
+        .filter(Sale.saledate <= end_date_obj)
         .all()
     )
 
     SoldWork = namedtuple("SoldWork", [
-        "worktitle", "artistid", "datelisted", "worktype",
+        "worktitle", "artist_firstname", "artist_lastname", "datelisted", "worktype",
         "workmedium", "workstyle", "workyearcompleted",
         "askingprice", "saleprice", "saledate"
     ])
     sold_works = [SoldWork(*row) for row in sold_works_raw]
 
-    # === Total Sales (NO date filtering) ===
+    # === Total Sales (filter by date range) ===
     total_sales = (
         db.query(func.sum(Sale.saleprice))
         .join(Artwork, Sale.artworkid == Artwork.artworkid)
         .filter(Artwork.collectorsocialsecuritynumber == buyer_id)
-        .scalar() or 0  # ✅ no date filter here
+        .filter(Sale.saledate >= start_date_obj)
+        .filter(Sale.saledate <= end_date_obj)
+        .scalar() or 0
     )
 
-    # === Work Returned (filter by Artwork.dateListed) ===
+    # === Work Returned ===
     returned_works_raw = (
         db.query(
             Artwork.worktitle,
-            Artwork.artistid,
+            Artist.firstname.label("artist_firstname"),
+            Artist.lastname.label("artist_lastname"),
             Artwork.datelisted,
             Artwork.worktype,
             Artwork.workmedium,
@@ -577,24 +611,26 @@ def individual_collector_sale_report(
             Artwork.askingprice,
             Artwork.datereturned
         )
+        .join(Artist, Artwork.artistid == Artist.artistid)
         .filter(Artwork.collectorsocialsecuritynumber == buyer_id)
-        .filter(Artwork.datereturned.isnot(None))
-        .filter(Artwork.datelisted >= start_date_obj)
-        .filter(Artwork.datelisted <= end_date_obj)
+        .filter(func.lower(Artwork.status) == 'returned')  # Case-insensitive status check
+        .filter(Artwork.datereturned >= start_date_obj)
+        .filter(Artwork.datereturned <= end_date_obj)
         .all()
     )
 
     ReturnedWork = namedtuple("ReturnedWork", [
-        "worktitle", "artistid", "datelisted", "worktype", "workmedium",
-        "workstyle", "workyearcompleted", "askingprice", "datereturned"
+        "worktitle", "artist_firstname", "artist_lastname", "datelisted", "worktype",
+        "workmedium", "workstyle", "workyearcompleted", "askingprice", "datereturned"
     ])
     returned_works = [ReturnedWork(*row) for row in returned_works_raw]
 
-    # === Work For Sale (filter by Artwork.dateListed) ===
+    # === Work For Sale ===
     for_sale_works_raw = (
         db.query(
             Artwork.worktitle,
-            Artwork.artistid,
+            Artist.firstname.label("artist_firstname"),
+            Artist.lastname.label("artist_lastname"),
             Artwork.datelisted,
             Artwork.worktype,
             Artwork.workmedium,
@@ -602,30 +638,30 @@ def individual_collector_sale_report(
             Artwork.workyearcompleted,
             Artwork.askingprice
         )
+        .join(Artist, Artwork.artistid == Artist.artistid)
         .filter(Artwork.collectorsocialsecuritynumber == buyer_id)
-        .filter(Artwork.status == 'for sale')
+        .filter(func.lower(Artwork.status).in_(['for sale', 'For Sale']))  # Case-insensitive status check
         .filter(Artwork.datelisted >= start_date_obj)
         .filter(Artwork.datelisted <= end_date_obj)
         .all()
     )
 
     ForSaleWork = namedtuple("ForSaleWork", [
-        "worktitle", "artistid", "datelisted", "worktype",
+        "worktitle", "artist_firstname", "artist_lastname", "datelisted", "worktype",
         "workmedium", "workstyle", "workyearcompleted", "askingprice"
     ])
     for_sale_works = [ForSaleWork(*row) for row in for_sale_works_raw]
 
-    # === Total Asking Price (filter by Artwork.dateListed) ===
+    # === Total Asking Price ===
     total_asking_price = (
         db.query(func.sum(Artwork.askingprice))
         .filter(Artwork.collectorsocialsecuritynumber == buyer_id)
-        .filter(Artwork.status == 'for sale')
+        .filter(func.lower(Artwork.status).in_(['for sale', 'For Sale']))  # Case-insensitive status check
         .filter(Artwork.datelisted >= start_date_obj)
         .filter(Artwork.datelisted <= end_date_obj)
         .scalar() or 0
     )
 
-    # 🔥 Finally render the page
     return templates.TemplateResponse(
         "reports/individual-collector-sale.html",
         {

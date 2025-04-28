@@ -24,7 +24,7 @@
           {% for sw in sold_works %}
           <tr>
             <td>{{ sw.worktitle }}</td>
-            <td>{{ artist_id }}</td>
+            <td>{{ sw.artist_firstname }} {{ sw.artist_lastname }}</td>
             <td>{{ sw.datelisted }}</td>
             <td>{{ sw.worktype }}</td>
             <td>{{ sw.workmedium }}</td>
@@ -62,7 +62,7 @@
           {% for rw in returned_works %}
           <tr>
             <td>{{ rw.worktitle }}</td>
-            <td>{{ artist_id }}</td>
+            <td>{{ rw.artist_firstname }} {{ rw.artist_lastname }}</td>
             <td>{{ rw.datelisted }}</td>
             <td>{{ rw.worktype }}</td>
             <td>{{ rw.workmedium }}</td>
@@ -94,10 +94,10 @@
           </tr>
         </thead>
         <tbody>
-          {% for fsw in forSale_works %}
+          {% for fsw in for_sale_works %}
           <tr>
             <td>{{ fsw.worktitle }}</td>
-            <td>{{ artist_id }}</td>
+            <td>{{ fsw.artist_firstname }} {{ fsw.artist_lastname }}</td>
             <td>{{ fsw.datelisted }}</td>
             <td>{{ fsw.worktype }}</td>
             <td>{{ fsw.workmedium }}</td>

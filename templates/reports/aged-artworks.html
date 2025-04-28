@@ -4,12 +4,11 @@
 <section class="report-container">
   <h1 class="report-title">Age Artwork Report</h1>
   <h2 class="report-date">Report Date: {{ todayDate }}</h2>
-{{aged_artworks}}
   <div class="report-table-wrapper">
     <table class="report-table">
       <thead>
         <tr>
-          <th>Owner Name</th>
+          <th>Owner/Artist Name</th>
           <th>Owner Telephone</th>
           <th>Artist Name</th>
           <th>Title</th>
@@ -20,8 +19,20 @@
       <tbody>
         {% for aged_artwork in aged_artworks %}
         <tr>
-          <td>{{ aged_artwork.collector_firstname }} {{ aged_artwork.collector_lastname }}</td>
-          <td>{{ aged_artwork.area_code }}-{{ aged_artwork.collector_phone }}</td>
+          <td>
+            {% if aged_artwork.collector_firstname and aged_artwork.collector_lastname %}
+              {{ aged_artwork.collector_firstname }} {{ aged_artwork.collector_lastname }}
+            {% else %}
+              {{ aged_artwork.artist_firstname }} {{ aged_artwork.artist_lastname }} (Artist)
+            {% endif %}
+          </td>
+          <td>
+            {% if aged_artwork.area_code and aged_artwork.collector_phone %}
+              {{ aged_artwork.area_code }}-{{ aged_artwork.collector_phone }}
+            {% else %}
+              N/A
+            {% endif %}
+          </td>
           <td>{{ aged_artwork.artist_firstname }} {{ aged_artwork.artist_lastname }}</td>
           <td>{{ aged_artwork.work_title }}</td>
           <td>{{ aged_artwork.date_listed }}</td>
