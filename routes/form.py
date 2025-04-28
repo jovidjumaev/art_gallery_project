@@ -567,8 +567,13 @@ def find_artwork(request: Request):
 @router.post("/get-filter", response_class=HTMLResponse)
 async def get_filtered_artworks(
     request: Request,
+<<<<<<< Updated upstream
     artist_firstname: Optional[str] = Form(None),
     artist_lastname: Optional[str] = Form(None),
+=======
+    artist_firstname: str = Form(...),
+    artist_lastname: str = Form(...),
+>>>>>>> Stashed changes
     type: Optional[str] = Form(None),
     otherType: Optional[str] = Form(None),
     medium: Optional[str] = Form(None),
@@ -593,6 +598,7 @@ async def get_filtered_artworks(
     # Always filter artworks that are "for sale"
     query = query.filter(Artwork.status == "for sale")
 
+<<<<<<< Updated upstream
     # Apply artist strict matching
     if artist_firstname and artist_lastname:
         trimmed_firstname = func.trim(Artist.firstname)
@@ -604,6 +610,14 @@ async def get_filtered_artworks(
         )
 
     # Apply additional filters
+=======
+    # Apply artist name filters
+    query = query.filter(
+        Artist.firstname.ilike(f"%{artist_firstname.strip()}%"),
+        Artist.lastname.ilike(f"%{artist_lastname.strip()}%")
+    )
+
+>>>>>>> Stashed changes
     if final_type:
         query = query.filter(Artwork.worktype.ilike(f"%{final_type}%"))
     if final_medium:

@@ -1,6 +1,7 @@
 {% extends 'index.html' %}
 
 {% block content %}
+<<<<<<< Updated upstream
 <div class="form-wrapper">
   <h1>🎨 Find a Work of Art for a Customer</h1>
 
@@ -65,27 +66,134 @@
   </form>
 </div>
 
+=======
+<div class="container">
+    <h2>Find Artwork</h2>
+    
+    <form method="post" action="/artgalleryproject/form/get-filter" class="search-form">
+        <div class="form-group">
+            <label for="artist_firstname">Artist First Name:</label>
+            <input type="text" id="artist_firstname" name="artist_firstname" required>
+        </div>
+        <div class="form-group">
+            <label for="artist_lastname">Artist Last Name:</label>
+            <input type="text" id="artist_lastname" name="artist_lastname" required>
+        </div>
+        <div class="form-group">
+            <label for="type">Type:</label>
+            <select id="type" name="type">
+                <option value="">All Types</option>
+                <option value="Painting">Painting</option>
+                <option value="Sculpture">Sculpture</option>
+                <option value="Digital Art">Digital Art</option>
+                <option value="Photography">Photography</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="form-group other-type" style="display: none;">
+            <label for="otherType">Specify Type:</label>
+            <input type="text" id="otherType" name="otherType">
+        </div>
+        <div class="form-group">
+            <label for="medium">Medium:</label>
+            <select id="medium" name="medium">
+                <option value="">All Mediums</option>
+                <option value="Oil">Oil</option>
+                <option value="Acrylic">Acrylic</option>
+                <option value="Watercolor">Watercolor</option>
+                <option value="Mixed Media">Mixed Media</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="form-group other-medium" style="display: none;">
+            <label for="otherMedium">Specify Medium:</label>
+            <input type="text" id="otherMedium" name="otherMedium">
+        </div>
+        <div class="form-group">
+            <label for="style">Style:</label>
+            <select id="style" name="style">
+                <option value="">All Styles</option>
+                <option value="Realism">Realism</option>
+                <option value="Abstract">Abstract</option>
+                <option value="Impressionism">Impressionism</option>
+                <option value="Modern">Modern</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="form-group other-style" style="display: none;">
+            <label for="otherStyle">Specify Style:</label>
+            <input type="text" id="otherStyle" name="otherStyle">
+        </div>
+        <button type="submit" class="btn-primary">Search</button>
+    </form>
+</div>
+
+<style>
+    .search-form {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .btn-primary {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+>>>>>>> Stashed changes
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-      function handleSelectChange(selectId, inputId) {
-        const selectElement = document.getElementById(selectId);
-        const inputElement = document.getElementById(inputId);
-    
-        selectElement.addEventListener('change', function() {
-          if (this.value === 'Other') {
-            inputElement.classList.remove('hidden');
-            inputElement.required = true;
-          } else {
-            inputElement.classList.add('hidden');
-            inputElement.value = '';  // Clear input when not "Other"
-            inputElement.required = false;
-          }
+        // Show/hide "Other" input fields
+        const typeSelect = document.getElementById('type');
+        const mediumSelect = document.getElementById('medium');
+        const styleSelect = document.getElementById('style');
+        
+        const otherTypeDiv = document.querySelector('.other-type');
+        const otherMediumDiv = document.querySelector('.other-medium');
+        const otherStyleDiv = document.querySelector('.other-style');
+
+        typeSelect.addEventListener('change', function() {
+            otherTypeDiv.style.display = this.value === 'Other' ? 'block' : 'none';
         });
-      }
-    
-      handleSelectChange('type', 'otherType');
-      handleSelectChange('medium', 'otherMedium');
-      handleSelectChange('style', 'otherStyle');
+
+        mediumSelect.addEventListener('change', function() {
+            otherMediumDiv.style.display = this.value === 'Other' ? 'block' : 'none';
+        });
+
+        styleSelect.addEventListener('change', function() {
+            otherStyleDiv.style.display = this.value === 'Other' ? 'block' : 'none';
+        });
     });
 </script>
 {% endblock %}
