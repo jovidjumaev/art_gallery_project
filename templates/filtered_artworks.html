@@ -24,7 +24,7 @@
           <td>{{ artwork.workmedium }}</td>
           <td>{{ artwork.workstyle }}</td>
           <td>${{ artwork.askingprice }}</td>
-          <td>{{ artwork.status }}</td>
+          <td>{{ artwork.status|capitalize }}</td>
         </tr>
         {% endfor %}
       </tbody>
