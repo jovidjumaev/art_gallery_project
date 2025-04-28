@@ -1,30 +1,73 @@
+/* Page Wrapper */
 .form-selection-wrapper {
-  display: flex;
-  justify-content: center;
-  padding: 40px 20px;
-}
-
-.form-selection-container {
+  padding: 60px 20px;
+  background: #f0f2f5;
+  min-height: 100vh;
   text-align: center;
-  max-width: 400px;
+  border: 2px;
 }
 
-.form-links div {
-  margin: 10px 0;
+/* Section Title */
+.form-selection-wrapper h2 {
+  font-size: 36px;
+  margin-bottom: 40px;
+  color: #333;
 }
 
-.form-link {
-  display: inline-block;
+/* Grid Layout for Cards */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  justify-items: center;
+}
+
+/* Card Design */
+.form-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   width: 100%;
-  padding: 12px;
-  background-color: #4CAF50;
-  color: white;
+  max-width: 340px;
   text-decoration: none;
-  border-radius: 8px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+  color: inherit;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
 }
 
-.form-link:hover {
-  background-color: #45a049;
+.form-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+}
+
+/* Card Top Image */
+.card-image {
+  height: 150px;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.4s ease;
+}
+
+/* Zoom Image slightly on Hover */
+.form-card:hover .card-image {
+  transform: scale(1.05);
+}
+
+/* Card Content */
+.card-content {
+  padding: 20px;
+  text-align: left;
+}
+
+.card-content h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+.card-content p {
+  font-size: 14px;
+  color: #666;
 }

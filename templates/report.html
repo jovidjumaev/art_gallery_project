@@ -1,22 +1,73 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<div class="report-selection-wrapper">
-  <div class="report-selection-container">
-    <h2>Select Report</h2>
+<div class="form-selection-wrapper">
+  <h2>Select a Report</h2>
 
-    <div class="report-links">
-      <div><a href="/artgalleryproject/report/active-artists" class="report-link">Active Artists Summary Report</a></div>
-      <div><a href="/artgalleryproject/report/individual-artist" class="report-link">Individual Artist Sales Report</a></div>
-      <div><a href="/artgalleryproject/report/collector-summary" class="report-link">Collectors Summary Report</a></div>
-      <div><a href="/artgalleryproject/report/individual-collector-sale" class="report-link">Individual Collector Sales Report</a></div>
-      <div><a href="/artgalleryproject/report/work-for-sale" class="report-link">Works for Sale Report</a></div>
-      <div><a href="/artgalleryproject/report/sales-this-week" class="report-link">Sales This Week Report</a></div>
-      <div><a href="/artgalleryproject/report/aged-artworks" class="report-link">Aged Artworks Report</a></div>
-      <div><a href="/artgalleryproject/report/show-details" class="report-link">Art Show Details</a></div>
-    </div>
+  <div class="form-grid">
+    <a href="/artgalleryproject/report/active-artists" class="form-card">
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/active-artist.jpg');"></div>
+      <div class="card-content">
+        <h3>Active Artists Summary</h3>
+        <p>View a list of currently active artists and their details.</p>
+      </div>
+    </a>
+
+    <a href="/artgalleryproject/report/individual-artist" class="form-card">
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/individual-coll-sale.jpeg');"></div>
+      <div class="card-content">
+        <h3>Individual Artist Sales</h3>
+        <p>View sales information for a selected artist.</p>
+      </div>
+    </a>
+
+    <a href="/artgalleryproject/report/collector-summary" class="form-card">
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/collector-summary.jpg');"></div>
+      <div class="card-content">
+        <h3>Collectors Summary</h3>
+        <p>Overview of all art collectors in the gallery.</p>
+      </div>
+    </a>
+
+    <a href="/artgalleryproject/report/individual-collector-sale" class="form-card">
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/collector-sale.jpg');"></div>
+      <div class="card-content">
+        <h3>Individual Collector Sales</h3>
+        <p>Sales history for an individual collector.</p>
+      </div>
+    </a>
+
+    <a href="/artgalleryproject/report/work-for-sale" class="form-card">
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/on-sale.jpg');"></div>
+      <div class="card-content">
+        <h3>Works for Sale</h3>
+        <p>List of artworks currently available for sale.</p>
+      </div>
+    </a>
+
+    <a href="/artgalleryproject/report/sales-this-week" class="form-card">
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/this-week-sale.jpg');"></div>
+      <div class="card-content">
+        <h3>Sales This Week</h3>
+        <p>Report of all artworks sold in the past week.</p>
+      </div>
+    </a>
+
+    <a href="/artgalleryproject/report/aged-artworks" class="form-card">
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/age-artwork.jpg');"></div>
+      <div class="card-content">
+        <h3>Aged Artworks</h3>
+        <p>Artworks that have been listed for a long period.</p>
+      </div>
+    </a>
+
+    <a href="/artgalleryproject/report/show-details" class="form-card">
+      <div class="card-image" style="background-image: url('{{ request.scope.root_path }}/static/images/report-img/artwork.jpg');"></div>
+      <div class="card-content">
+        <h3>Art Show Details</h3>
+        <p>Details about current and past art shows.</p>
+      </div>
+    </a>
   </div>
 </div>
-
-<script src="{{ url_for('static', path='js/report-select.js') }}"></script>
 {% endblock %}

@@ -1,0 +1,44 @@
+{% extends "index.html" %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-text">
+    <h1>Welcome to Aurora Art Gallery</h1>
+    <p>Discover, experience, and connect with extraordinary works of art.</p>
+    <a href="/form" class="btn-primary">Explore Collections</a>
+  </div>
+</section>
+
+<section class="featured-section">
+  <h2>Featured Works</h2>
+  <div class="gallery-grid">
+    <div class="art-card">
+      <img src="{{ request.scope.root_path }}/static/images/art1.jpg" alt="Artwork 1">
+      <h3>The Starry Night</h3>
+      <p>By Vincent Van Gogh</p>
+    </div>
+    <div class="art-card">
+      <img src="{{ request.scope.root_path }}/static/images/art2.jpg" alt="Artwork 2">
+      <h3>A Memory of Phnom Penh</h3>
+      <p>By Yamada Takakaz</p>
+    </div>
+    <div class="art-card">
+      <img src="{{ request.scope.root_path }}/static/images/art3.jpg" alt="Artwork 3">
+      <h3>Mona Lisa</h3>
+      <p>By Leonardo da Vinci</p>
+    </div>
+  </div>
+</section>
+
+<section class="about-section">
+  <h2>About Us</h2>
+  <p>
+    Aurora Art Gallery is a contemporary space dedicated to showcasing unique and inspiring artwork from talented artists around the world.
+    Our mission is to connect people with art that moves, challenges, and transforms.
+  </p>
+</section>
+{% endblock %}
+
+{% block script %}
+<!-- If you have any extra JavaScript for homepage, add here -->
+{% endblock %}

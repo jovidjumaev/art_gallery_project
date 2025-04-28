@@ -1,19 +1,56 @@
 {% extends 'index.html' %}
 
 
-
 {% block content %}
 <div class="form-selection-wrapper">
-  <div class="form-selection-container">
-    <h2>Fill Out a Form</h2>
+  <h2>Select a Form to Fill Out</h2>
 
-    <div class="form-links">
-      <div><a href="/artgalleryproject/form/add-artist" class="form-link">Artist Information Form</a></div>
-      <div><a href="/artgalleryproject/form/collector-form" class="form-link">Collector Information Form</a></div>
-      <div><a href="/artgalleryproject/form/artwork-form" class="form-link">Artwork Information Form</a></div>
-      <div><a href="/artgalleryproject/form/sale-invoice" class="form-link">Sale Invoice</a></div>
-      <div><a href="/artgalleryproject/form/mailing-list-form" class="form-link">Mailing List Form</a></div>
-    </div>
+  <div class="form-grid">
+    <!-- Artist Form Card -->
+    <a href="/artgalleryproject/form/add-artist" class="form-card">
+      <div class="card-image" style="background-image: url('/artgalleryproject/static/images/artist.jpeg');"></div>
+      <div class="card-content">
+        <h3>Artist Information</h3>
+        <p>Add a new artist to the gallery database.</p>
+      </div>
+    </a>
+
+    <!-- Collector Form Card -->
+    <a href="/artgalleryproject/form/collector-form" class="form-card">
+      <div class="card-image" style="background-image: url('/artgalleryproject/static/images/art-collector.jpg');"></div>
+      <div class="card-content">
+        <h3>Collector Information</h3>
+        <p>Register a new art collector profile.</p>
+      </div>
+    </a>
+
+    <!-- Artwork Form Card -->
+    <a href="/artgalleryproject/form/artwork-form" class="form-card">
+      <div class="card-image" style="background-image: url('/artgalleryproject/static/images/artwork.jpg');"></div>
+      <div class="card-content">
+        <h3>Artwork Information</h3>
+        <p>Enter artwork details for exhibition and sale.</p>
+      </div>
+    </a>
+
+    <!-- Sale Invoice Form Card -->
+    <a href="/artgalleryproject/form/sale-invoice" class="form-card">
+      <div class="card-image" style="background-image: url('/artgalleryproject/static/images/invoice.jpg');"></div>
+      <div class="card-content">
+        <h3>Sale Invoice</h3>
+        <p>Record the completed sale of an artwork.</p>
+      </div>
+    </a>
+
+    <!-- Mailing List Form Card -->
+    <a href="/artgalleryproject/form/mailing-list-form" class="form-card">
+      <div class="card-image" style="background-image: url('/artgalleryproject/static/images/mailist.jpg');"></div>
+      <div class="card-content">
+        <h3>Mailing List Form</h3>
+        <p>Add a customer to the gallery's mailing list.</p>
+      </div>
+    </a>
+
   </div>
 </div>
 {% endblock %}

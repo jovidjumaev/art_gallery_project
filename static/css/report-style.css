@@ -1,30 +1,53 @@
-.report-selection-wrapper {
-  display: flex;
-  justify-content: center;
-  padding: 40px 20px;
-}
-
-.report-selection-container {
+.form-selection-wrapper {
   text-align: center;
-  max-width: 400px;
+  padding: 2rem 1rem;
 }
 
-.report-links div {
-  margin: 10px 0;
+.form-selection-wrapper h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
 }
 
-.report-link {
-  display: inline-block;
-  width: 100%;
-  padding: 12px;
-  background-color: #4CAF50;
-  color: white;
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+.form-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
   text-decoration: none;
-  border-radius: 8px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+  color: inherit;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  width: 100%;
+  max-width: 300px;
 }
 
-.report-link:hover {
-  background-color: #45a049;
+.form-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.card-image {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+}
+
+.card-content {
+  padding: 1rem;
+}
+
+.card-content h3 {
+  margin: 0.5rem 0;
+  font-size: 1.25rem;
+}
+
+.card-content p {
+  font-size: 0.95rem;
+  color: #666;
 }

@@ -25,7 +25,7 @@ templates = Jinja2Templates(directory="templates")
 
 @gallery_app.get("/", response_class=HTMLResponse)
 def read_artists(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("home.html", {"request": request})
 
 
 
