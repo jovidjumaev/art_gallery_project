@@ -2,8 +2,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from urllib.parse import quote_plus
 
-username = "mnit"
-password = "M3ng$run@10"
+username = "jjumaev"
+password = "34fgres3456@2001"
 host = "csdb.fu.campus"
 port = 1521
 service_name = "CS40"  # match exactly

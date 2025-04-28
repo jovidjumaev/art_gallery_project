@@ -1,0 +1,314 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="profile-container">
+    <h2 class="section-title">Profile Settings</h2>
+    <p class="section-subtitle">Manage your account information and security settings</p>
+
+    {% if success %}
+    <div class="alert alert-success">
+        <span class="alert-icon">✅</span>
+        <div class="alert-content">
+            <strong>Success!</strong>
+            <p>{{ success }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="alert alert-error">
+        <span class="alert-icon">❌</span>
+        <div class="alert-content">
+            <strong>Error!</strong>
+            <p>{{ error }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Profile Information Section -->
+    <div class="profile-section">
+        <h3 class="section-header">
+            <span class="section-icon">👤</span>
+            Profile Information
+        </h3>
+        <form method="POST" action="/artgalleryproject/auth/profile/update" class="profile-form">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <div class="input-group">
+                    <input type="text" id="firstName" name="firstName" value="{{ user.first_name }}" readonly>
+                    <button type="button" class="edit-btn" onclick="toggleEdit('firstName')">✏️</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <div class="input-group">
+                    <input type="text" id="lastName" name="lastName" value="{{ user.last_name }}" readonly>
+                    <button type="button" class="edit-btn" onclick="toggleEdit('lastName')">✏️</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Primary Email</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+            </div>
+            <div class="form-group">
+                <label for="secondaryEmail">Secondary Email (Optional)</label>
+                <input type="email" id="secondaryEmail" name="secondaryEmail" value="{{ user.secondary_email or '' }}">
+                <small>Add a secondary email for backup purposes</small>
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" value="{{ user.username }}" readonly>
+                <small>Username cannot be changed</small>
+            </div>
+            <button type="submit" class="btn-primary">Save Changes</button>
+        </form>
+    </div>
+
+    <!-- Change Password Section -->
+    <div class="profile-section">
+        <h3 class="section-header">
+            <span class="section-icon">🔒</span>
+            Change Password
+        </h3>
+        <form method="POST" action="/artgalleryproject/auth/profile/password" class="profile-form">
+            <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input type="password" id="currentPassword" name="currentPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" name="newPassword" required>
+                <div class="password-requirements">
+                    Password must:
+                    <ul>
+                        <li>Be at least 8 characters long</li>
+                        <li>Include lowercase letters</li>
+                        <li>Include at least one number</li>
+                        <li>Include at least one special character</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm New Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+            <button type="submit" class="btn-primary">Change Password</button>
+        </form>
+    </div>
+</div>
+
+<style>
+.profile-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.section-subtitle {
+    color: #666;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.profile-section {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-icon {
+    font-size: 1.2rem;
+}
+
+.profile-form {
+    display: grid;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #333;
+}
+
+.input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.input-group input {
+    flex: 1;
+}
+
+.edit-btn {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+    background-color: #e9ecef;
+    color: #333;
+}
+
+.form-group input {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.form-group input[readonly] {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+}
+
+.form-group small {
+    color: #666;
+    font-size: 0.875rem;
+}
+
+.btn-primary {
+    background-color: #4CAF50;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.alert-success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.alert-error {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.alert-icon {
+    font-size: 1.2rem;
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-content strong {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.password-requirements {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.password-requirements ul {
+    margin: 0.5rem 0 0 1.5rem;
+    padding: 0;
+}
+
+.password-requirements li {
+    margin-bottom: 0.25rem;
+}
+</style>
+
+<script>
+function toggleEdit(fieldId) {
+    const input = document.getElementById(fieldId);
+    const isReadOnly = input.readOnly;
+    
+    if (isReadOnly) {
+        input.readOnly = false;
+        input.focus();
+        input.style.backgroundColor = 'white';
+    } else {
+        input.readOnly = true;
+        input.style.backgroundColor = '#f8f9fa';
+    }
+}
+
+// Password validation
+document.addEventListener('DOMContentLoaded', function() {
+    const newPassword = document.getElementById('newPassword');
+    const confirmPassword = document.getElementById('confirmPassword');
+
+    newPassword.addEventListener('input', function() {
+        const password = this.value;
+        const hasLetter = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecial = /[\W_]/.test(password);
+        const isLongEnough = password.length >= 8;
+        
+        if (!hasLetter || !hasNumber || !hasSpecial || !isLongEnough) {
+            this.setCustomValidity('Password must be at least 8 characters long and include lowercase letters, numbers, and special characters');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+
+    confirmPassword.addEventListener('input', function() {
+        if (this.value !== newPassword.value) {
+            this.setCustomValidity('Passwords must match');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+});
+</script>
+{% endblock %} 

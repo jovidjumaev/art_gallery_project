@@ -1,45 +1,160 @@
-{% extends "index.html" %}
-
-{% block content %}
-<div class="register-container">
-    <h2>📝 Register</h2>
-
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
-
-    <form method="post" action="/artgalleryproject/auth/register">
-        <div>
-            <label>Username:</label>
-            <input type="text" name="username" required>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Register - Furman Art Gallery</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      line-height: 1.6;
+    }
+    
+    .auth-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    
+    .auth-box {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    
+    .auth-box h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+    
+    .auth-form .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .auth-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #555;
+    }
+    
+    .auth-form input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    
+    .auth-form input:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+    
+    .auth-form small {
+      display: block;
+      color: #666;
+      margin-top: 0.25rem;
+      font-size: 0.875rem;
+    }
+    
+    .form-actions {
+      margin-top: 2rem;
+    }
+    
+    .btn-primary {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-primary:hover {
+      background-color: #45a049;
+    }
+    
+    .auth-links {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    
+    .auth-links a {
+      color: #4CAF50;
+      text-decoration: none;
+    }
+    
+    .auth-links a:hover {
+      text-decoration: underline;
+    }
+    
+    .error-message {
+      background-color: #ffebee;
+      color: #c62828;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-box">
+      <h2>📝 Create Account</h2>
+      {% if error %}
+      <div class="error-message">
+        {{ error }}
+      </div>
+      {% endif %}
+      <form method="POST" action="/artgalleryproject/auth/register" class="auth-form">
+        <div class="form-group">
+          <label>Username *</label>
+          <input type="text" name="username" required>
+          <small>Choose a unique username</small>
         </div>
-
-        <div>
-            <label>Password:</label>
-            <input type="password" name="password" required>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" name="email" required>
+          <small>Enter a valid email address</small>
         </div>
-
-        <div>
-            <label>Confirm Password:</label>
-            <input type="password" name="confirm_password" required>
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" name="first_name" required>
         </div>
-
-        <div>
-            <label>Email:</label>
-            <input type="email" name="email" required>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" name="last_name" required>
         </div>
-
-        <div>
-            <label>First Name:</label>
-            <input type="text" name="first_name" required>
+        <div class="form-group">
+          <label>Password *</label>
+          <input type="password" name="password" required>
+          <small>At least 8 characters, include uppercase, lowercase, number, and special character</small>
         </div>
-
-        <div>
-            <label>Last Name:</label>
-            <input type="text" name="last_name" required>
+        <div class="form-group">
+          <label>Confirm Password *</label>
+          <input type="password" name="confirm_password" required>
+          <small>Must match password</small>
         </div>
-
-        <button type="submit">Register</button>
-    </form>
-</div>
-{% endblock %}
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Create Account</button>
+        </div>
+      </form>
+      <div class="auth-links">
+        <p>Already have an account? <a href="/artgalleryproject/auth/login">Login</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,23 +1,237 @@
-{% extends "index.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - Furman Art Gallery</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      line-height: 1.6;
+    }
+    
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      padding: 1rem;
+    }
+    
+    .auth-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+    }
+    
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .auth-header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+    
+    .auth-header p {
+      color: #64748b;
+      font-size: 0.875rem;
+    }
+    
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .form-group label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #1e293b;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      color: #1e293b;
+      transition: border-color 0.2s;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+    
+    .form-group input::placeholder {
+      color: #94a3b8;
+    }
+    
+    .password-input {
+      position: relative;
+    }
+    
+    .toggle-password {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      padding: 0.25rem;
+      color: #94a3b8;
+      cursor: pointer;
+    }
+    
+    .toggle-password:hover {
+      color: #1e293b;
+    }
+    
+    .submit-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .submit-button:hover {
+      background: #45a049;
+    }
+    
+    .auth-footer {
+      text-align: center;
+      margin-top: 2rem;
+      color: #64748b;
+      font-size: 0.875rem;
+    }
+    
+    .auth-footer a {
+      color: #4CAF50;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .auth-footer a:hover {
+      text-decoration: underline;
+    }
+    
+    .alert {
+      padding: 0.75rem;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .alert-error {
+      background-color: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fee2e2;
+    }
+    
+    .alert-success {
+      background-color: #f0fdf4;
+      color: #16a34a;
+      border: 1px solid #dcfce7;
+    }
+    
+    @media (max-width: 640px) {
+      .auth-card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>Welcome Back</h1>
+        <p>Sign in to your account</p>
+      </div>
 
-{% block content %}
-<div class="login-container">
-    <h2>🔐 Login</h2>
+      {% if error %}
+      <div class="alert alert-error">
+        {{ error }}
+      </div>
+      {% endif %}
 
-    {% if error %}
-        <p style="color:red;">{{ error }}</p>
-    {% endif %}
+      {% if success %}
+      <div class="alert alert-success">
+        {{ success }}
+      </div>
+      {% endif %}
 
-    <form method="post" action="/artgalleryproject/auth/login">
-        <div>
-            <label>Username:</label>
-            <input type="text" name="username" required>
+      <form method="POST" action="/artgalleryproject/auth/login" class="auth-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required placeholder="Enter your username">
         </div>
-        <div>
-            <label>Password:</label>
-            <input type="password" name="password" required>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-input">
+            <input type="password" id="password" name="password" required placeholder="Enter your password">
+            <button type="button" class="toggle-password" onclick="togglePassword()">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1.66666 10C1.66666 10 4.16666 3.33333 10 3.33333C15.8333 3.33333 18.3333 10 18.3333 10C18.3333 10 15.8333 16.6667 10 16.6667C4.16666 16.6667 1.66666 10 1.66666 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10 12.5C11.3807 12.5 12.5 11.3807 12.5 10C12.5 8.61929 11.3807 7.5 10 7.5C8.61929 7.5 7.5 8.61929 7.5 10C7.5 11.3807 8.61929 12.5 10 12.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
         </div>
-        <button type="submit">Login</button>
-    </form>
-</div>
-{% endblock %}
+
+        <button type="submit" class="submit-button">Sign In</button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Don't have an account? <a href="/artgalleryproject/auth/register">Create Account</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.querySelector('.toggle-password svg');
+    
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      eyeIcon.innerHTML = `
+        <path d="M1.66666 10C1.66666 10 4.16666 3.33333 10 3.33333C15.8333 3.33333 18.3333 10 18.3333 10C18.3333 10 15.8333 16.6667 10 16.6667C4.16666 16.6667 1.66666 10 1.66666 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10 12.5C11.3807 12.5 12.5 11.3807 12.5 10C12.5 8.61929 11.3807 7.5 10 7.5C8.61929 7.5 7.5 8.61929 7.5 10C7.5 11.3807 8.61929 12.5 10 12.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2.5 2.5L17.5 17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      `;
+    } else {
+      passwordInput.type = 'password';
+      eyeIcon.innerHTML = `
+        <path d="M1.66666 10C1.66666 10 4.16666 3.33333 10 3.33333C15.8333 3.33333 18.3333 10 18.3333 10C18.3333 10 15.8333 16.6667 10 16.6667C4.16666 16.6667 1.66666 10 1.66666 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10 12.5C11.3807 12.5 12.5 11.3807 12.5 10C12.5 8.61929 11.3807 7.5 10 7.5C8.61929 7.5 7.5 8.61929 7.5 10C7.5 11.3807 8.61929 12.5 10 12.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      `;
+    }
+  }
+  </script>
+</body>
+</html>

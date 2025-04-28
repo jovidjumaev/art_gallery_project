@@ -26,6 +26,7 @@ from models.buyer import Buyer
 from models.artshow import ArtShow
 from models.shownin import ShownIn
 from models.salesperson import Salesperson
+from models.zips import ZIPS
 
 templates = Jinja2Templates(directory="templates")
 
@@ -50,7 +51,8 @@ def artist_form(request: Request):
 
 @router.get("/artist-form", response_class=HTMLResponse)
 def get_artist_form(request: Request):
-    return templates.TemplateResponse("/form/artist-info-form.html", {"request": request})
+    today = datetime.now().strftime('%Y-%m-%d')
+    return templates.TemplateResponse("/form/artist-info-form.html", {"request": request, "today": today})
 
 # GET: display artist form page
 @router.get("/add-artist", response_class=HTMLResponse)
@@ -74,7 +76,7 @@ async def add_artist(
 
         # Validate lengths manually (your model limits)
         if len(artist_request.usualMedium) > 15 or len(artist_request.usualStyle) > 15 or len(artist_request.usualType) > 20:
-            return templates.TemplateResponse("add_artist.html", {
+            return templates.TemplateResponse("/form/artist-info-form.html", {
                 "request": request,
                 "error": "❌ Medium, Style, or Type exceeds allowed length."
             })
@@ -82,7 +84,7 @@ async def add_artist(
         # Check if SSN already exists (duplicate)
         existing_artist = db.query(Artist).filter_by(socialsecuritynumber=artist_request.socialSecurityNumber).first()
         if existing_artist:
-            return templates.TemplateResponse("add_artist.html", {
+            return templates.TemplateResponse("/form/artist-info-form.html", {
                 "request": request,
                 "error": "❌ This SSN already exists. Please use a unique value."
             })
@@ -129,7 +131,8 @@ async def add_artist(
 
 @router.get('/collector-form')
 async def get_collector(request: Request):
-    return templates.TemplateResponse("/form/collector-info-form.html", {"request": request})
+    today = datetime.now().strftime('%Y-%m-%d')
+    return templates.TemplateResponse("/form/collector-info-form.html", {"request": request, "today": today})
 
 @router.post('/add-collector', response_class=HTMLResponse)
 async def add_collector(
@@ -137,7 +140,32 @@ async def add_collector(
     db: Session = Depends(get_db),
     collector_request: CollectorRequest = Depends(CollectorRequest.as_form)
 ):
+    today = datetime.now().strftime('%Y-%m-%d')  # Get current date for all responses
     try:
+        # Validate interview date
+        if not collector_request.interviewDate:
+            return templates.TemplateResponse("/form/collector-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ Interview date is required. Please select a date."
+            })
+
+        try:
+            interview_date = datetime.strptime(collector_request.interviewDate.strip(), "%Y-%m-%d")
+            if interview_date > datetime.now():
+                return templates.TemplateResponse("/form/collector-info-form.html", {
+                    "request": request,
+                    "today": today,
+                    "error": "❌ Interview date cannot be in the future. Please select a past or current date."
+                })
+        except ValueError as e:
+            print(f"Date parsing error: {str(e)}")  # Debug log
+            return templates.TemplateResponse("/form/collector-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ Invalid interview date format. Please use YYYY-MM-DD format."
+            })
+
         # === Handle "Other" fields ===
         collection_type = collector_request.collectionType
         if collection_type.lower() == "other" and collector_request.otherTypeInput:
@@ -155,24 +183,28 @@ async def add_collector(
         if len(collection_type) > 20 or len(collection_medium) > 15 or len(collection_style) > 15:
             return templates.TemplateResponse("/form/collector-info-form.html", {
                 "request": request,
+                "today": today,
                 "error": "❌ Collection Type (max 20) or Medium/Style (max 15) exceeded."
             })
 
         if len(collector_request.firstName) > 15 or len(collector_request.lastName) > 20:
             return templates.TemplateResponse("/form/collector-info-form.html", {
                 "request": request,
+                "today": today,
                 "error": "❌ First Name (max 15) or Last Name (max 20) exceeded."
             })
 
         if len(collector_request.interviewerName) > 35:
             return templates.TemplateResponse("/form/collector-info-form.html", {
                 "request": request,
+                "today": today,
                 "error": "❌ Interviewer Name cannot exceed 35 characters."
             })
 
         if len(collector_request.street) > 50:
             return templates.TemplateResponse("/form/collector-info-form.html", {
                 "request": request,
+                "today": today,
                 "error": "❌ Street address cannot exceed 50 characters."
             })
 
@@ -180,21 +212,35 @@ async def add_collector(
         if len(collector_request.socialSecurityNumber.replace("-", "")) != 9:
             return templates.TemplateResponse("/form/collector-info-form.html", {
                 "request": request,
+                "today": today,
                 "error": "❌ SSN must be exactly 9 digits."
             })
+
+        # Check if SSN already exists
+        existing_collector = db.query(Collector).filter_by(socialsecuritynumber=collector_request.socialSecurityNumber.replace("-", "").strip()).first()
+        if existing_collector:
+            return templates.TemplateResponse("/form/collector-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ This Social Security Number is already registered. Please enter a different one."
+            })
+
         if len(collector_request.areaCode) != 3:
             return templates.TemplateResponse("/form/collector-info-form.html", {
                 "request": request,
+                "today": today,
                 "error": "❌ Area Code must be exactly 3 digits."
             })
         if len(collector_request.telephoneNumber) != 7:
             return templates.TemplateResponse("/form/collector-info-form.html", {
                 "request": request,
+                "today": today,
                 "error": "❌ Telephone Number must be exactly 7 digits."
             })
         if len(collector_request.zip) != 5:
             return templates.TemplateResponse("/form/collector-info-form.html", {
                 "request": request,
+                "today": today,
                 "error": "❌ ZIP Code must be exactly 5 digits."
             })
 
@@ -208,6 +254,7 @@ async def add_collector(
             if not artist:
                 return templates.TemplateResponse("/form/collector-info-form.html", {
                     "request": request,
+                    "today": today,
                     "error": "❌ Artist not found. Leave artist fields blank if not applicable."
                 })
             collection_artist_id = artist.artistid
@@ -217,7 +264,7 @@ async def add_collector(
             socialsecuritynumber=collector_request.socialSecurityNumber.replace("-", "").strip(),
             firstname=collector_request.firstName.strip(),
             lastname=collector_request.lastName.strip(),
-            interviewdate=datetime.strptime(collector_request.interviewDate.strip(), "%Y-%m-%d"),
+            interviewdate=interview_date,
             interviewername=collector_request.interviewerName.strip(),
             areacode=collector_request.areaCode.strip(),
             telephonenumber=collector_request.telephoneNumber.strip(),
@@ -236,43 +283,74 @@ async def add_collector(
 
         return templates.TemplateResponse("/form/collector-info-form.html", {
             "request": request,
+            "today": today,
             "success": True
         })
 
     except (IntegrityError, DataError, oracledb.DatabaseError) as e:
         db.rollback()
         error_msg = str(e)
-        error = "❌ Database error occurred."
         if "COLLECTOR_SSN_PK" in error_msg:
-            error = "❌ This SSN already exists. Use a unique SSN."
+            return templates.TemplateResponse("/form/collector-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ This Social Security Number is already registered. Please enter a different one."
+            })
         elif "ZIP_FK" in error_msg:
-            error = "❌ ZIP code not found. Use a valid ZIP."
+            return templates.TemplateResponse("/form/collector-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ ZIP code not found. Use a valid ZIP."
+            })
         elif "ORA-12899" in error_msg:
             if "SOCIALSECURITYNUMBER" in error_msg:
-                error = "❌ SSN must be exactly 9 digits."
+                return templates.TemplateResponse("/form/collector-info-form.html", {
+                    "request": request,
+                    "today": today,
+                    "error": "❌ SSN must be exactly 9 digits."
+                })
             elif "ZIP" in error_msg:
-                error = "❌ ZIP must be exactly 5 digits."
+                return templates.TemplateResponse("/form/collector-info-form.html", {
+                    "request": request,
+                    "today": today,
+                    "error": "❌ ZIP must be exactly 5 digits."
+                })
             elif "COLLECTIONTYPE" in error_msg:
-                error = "❌ Collection Type exceeds 20 characters."
+                return templates.TemplateResponse("/form/collector-info-form.html", {
+                    "request": request,
+                    "today": today,
+                    "error": "❌ Collection Type exceeds 20 characters."
+                })
             elif "COLLECTIONMEDIUM" in error_msg:
-                error = "❌ Collection Medium exceeds 15 characters."
+                return templates.TemplateResponse("/form/collector-info-form.html", {
+                    "request": request,
+                    "today": today,
+                    "error": "❌ Collection Medium exceeds 15 characters."
+                })
             elif "COLLECTIONSTYLE" in error_msg:
-                error = "❌ Collection Style exceeds 15 characters."
+                return templates.TemplateResponse("/form/collector-info-form.html", {
+                    "request": request,
+                    "today": today,
+                    "error": "❌ Collection Style exceeds 15 characters."
+                })
         return templates.TemplateResponse("/form/collector-info-form.html", {
             "request": request,
-            "error": error
+            "today": today,
+            "error": "❌ Database error. Please check your input and try again."
         })
 
     except Exception as e:
         db.rollback()
         return templates.TemplateResponse("/form/collector-info-form.html", {
             "request": request,
+            "today": today,
             "error": f"❌ Unexpected Error: {str(e)}"
         })
     
 @router.get('/artwork-form')
 async def get_artwork(request: Request): 
-    return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request})
+    today = datetime.now().strftime('%Y-%m-%d')
+    return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request, "today": today})
 
 @router.post('/add-artwork', response_class=HTMLResponse)
 async def add_artwork(
@@ -280,22 +358,41 @@ async def add_artwork(
     db: Session = Depends(get_db),
     artwork_request: ArtworkRequest = Depends(ArtworkRequest.as_form)
 ):
+    today = datetime.now().strftime('%Y-%m-%d')
     CURRENT_YEAR = 2025
 
     try:
+        print("Received artwork request:", artwork_request.dict())
+        
         # === Asking Price validation ===
         if not artwork_request.dateListed:
-            return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request, "error": "❌ Date Listed is required."})
+            return templates.TemplateResponse("/form/artwork-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ Date Listed is required."
+            })
 
         if not artwork_request.askingPrice:
-            return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request, "error": "❌ Asking Price is required."})
+            return templates.TemplateResponse("/form/artwork-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ Asking Price is required."
+            })
 
         try:
             asking_price = float(artwork_request.askingPrice)
             if asking_price <= 0:
-                return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request, "error": "❌ Asking Price must be greater than 0."})
+                return templates.TemplateResponse("/form/artwork-info-form.html", {
+                    "request": request,
+                    "today": today,
+                    "error": "❌ Asking Price must be greater than 0."
+                })
         except ValueError:
-            return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request, "error": "❌ Asking Price must be a valid number."})
+            return templates.TemplateResponse("/form/artwork-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ Asking Price must be a valid number."
+            })
 
         # === Lookup Artist ===
         artist = db.query(Artist).filter(
@@ -304,9 +401,14 @@ async def add_artwork(
         ).first()
 
         if not artist:
-            return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request, "error": "❌ Artist not found."})
+            return templates.TemplateResponse("/form/artwork-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ Artist not found."
+            })
 
         artist_id = artist.artistid
+        print(f"Found artist with ID: {artist_id}")
 
         # === Handle "Other" fields ===
         work_type = artwork_request.usualType
@@ -323,19 +425,39 @@ async def add_artwork(
 
         # === Validate Year Completed ===
         if not artwork_request.yearCompleted.isdigit() or len(artwork_request.yearCompleted) != 4:
-            return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request, "error": "❌ Year must be exactly 4 digits."})
+            return templates.TemplateResponse("/form/artwork-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ Year must be exactly 4 digits."
+            })
 
         year_completed = int(artwork_request.yearCompleted)
         if year_completed > CURRENT_YEAR:
-            return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request, "error": f"❌ Year cannot be beyond {CURRENT_YEAR}."})
+            return templates.TemplateResponse("/form/artwork-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": f"❌ Year cannot be beyond {CURRENT_YEAR}."
+            })
 
         # === Validate Lengths ===
         if len(work_type) > 20 or len(work_medium) > 15 or len(work_style) > 15:
-            return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request, "error": "❌ Work Type / Medium / Style exceeds length limits."})
+            return templates.TemplateResponse("/form/artwork-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ Work Type / Medium / Style exceeds length limits."
+            })
         if len(artwork_request.title) > 50:
-            return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request, "error": "❌ Title exceeds 50 characters."})
+            return templates.TemplateResponse("/form/artwork-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ Title exceeds 50 characters."
+            })
         if len(artwork_request.size) > 15:
-            return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request, "error": "❌ Size exceeds 15 characters."})
+            return templates.TemplateResponse("/form/artwork-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ Size exceeds 15 characters."
+            })
 
         # === Insert Artwork ===
         new_artwork = Artwork(
@@ -354,20 +476,52 @@ async def add_artwork(
             collectorsocialsecuritynumber=artwork_request.ownerSSN.strip() if artwork_request.ownerSSN else None
         )
 
+        print("Creating new artwork:", new_artwork.__dict__)
         db.add(new_artwork)
         db.commit()
+        print("Artwork successfully added to database")
 
-        return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request, "success": True})
+        return templates.TemplateResponse("/form/artwork-info-form.html", {
+            "request": request,
+            "today": today,
+            "success": True
+        })
+
+    except IntegrityError as e:
+        db.rollback()
+        error_msg = str(e)
+        print("Database integrity error:", error_msg)
+        if "ARTWORK_ARTISTID_TITLE_UK" in error_msg:
+            return templates.TemplateResponse("/form/artwork-info-form.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ This artist already has an artwork with the same title. Please use a different title."
+            })
+        return templates.TemplateResponse("/form/artwork-info-form.html", {
+            "request": request,
+            "today": today,
+            "error": "❌ Database error. Please check your input and try again."
+        })
 
     except Exception as e:
         db.rollback()
-        print(f"Unexpected error: {str(e)}")
-        return templates.TemplateResponse("/form/artwork-info-form.html", {"request": request, "error": f"❌ Unexpected error: {str(e)}"})
+        print("Unexpected error:", str(e))
+        return templates.TemplateResponse("/form/artwork-info-form.html", {
+            "request": request,
+            "today": today,
+            "error": f"❌ Unexpected error: {str(e)}"
+        })
 
 
+
+    
 @router.get('/sale-invoice')
 def get_sale_invoice_form(request: Request): 
-     return templates.TemplateResponse("/form/invoice-info.html", {"request": request})
+    today = datetime.now().strftime('%Y-%m-%d')
+    return templates.TemplateResponse("/form/invoice-info.html", {
+        "request": request,
+        "today": today
+    })
 @router.post("/add-invoice", response_class=HTMLResponse)
 async def add_invoice(
     request: Request,
@@ -378,6 +532,25 @@ async def add_invoice(
         # Step 1: Get form data
         data = artwork_sale.dict()
         print("Received form data:", data)
+
+        # Validate artist name and artwork title for numbers
+        if any(char.isdigit() for char in data['artistFirstName']):
+            return templates.TemplateResponse("/form/invoice-info.html", {
+                "request": request,
+                "error": "❌ Artist's first name cannot contain numbers."
+            })
+        
+        if any(char.isdigit() for char in data['artistLastName']):
+            return templates.TemplateResponse("/form/invoice-info.html", {
+                "request": request,
+                "error": "❌ Artist's last name cannot contain numbers."
+            })
+        
+        if any(char.isdigit() for char in data['artworkTitle']):
+            return templates.TemplateResponse("/form/invoice-info.html", {
+                "request": request,
+                "error": "❌ Artwork title cannot contain numbers."
+            })
 
         # Step 2: Lookup Artwork
         artwork = db.query(Artwork).join(Artist).filter(
@@ -437,11 +610,14 @@ async def add_invoice(
                 "error": f"❌ Invalid numeric value: {str(e)}"
             })
 
+        # Set sale date to today
+        current_date = datetime.now().date()
+
         # Step 6: Create Sale
         new_sale = Sale(
             artworkid=artwork.artworkid,
             amountremittedtoowner=float(amount_remitted),
-            saledate=datetime.strptime(data['saleDate'], "%Y-%m-%d"),
+            saledate=current_date,
             saleprice=float(sale_price),
             saletax=float(sale_tax),
             buyerid=buyer.buyerid,
@@ -449,17 +625,37 @@ async def add_invoice(
         )
 
         db.add(new_sale)
-        db.flush()  # Flush to get generated invoice number if needed immediately
-
-        # Step 7: Update Artwork Status
-        artwork.status = "sold"
-
-        db.commit()
+        try:
+            db.flush()  # Flush to get generated invoice number if needed immediately
+            # Step 7: Update Artwork Status
+            artwork.status = "Sold"
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            return templates.TemplateResponse("/form/invoice-info.html", {
+                "request": request,
+                "error": f"❌ Error creating sale: {str(e)}"
+            })
 
         return templates.TemplateResponse("/form/invoice-info.html", {
             "request": request,
             "success": True,
-            "message": f"✅ Sale recorded successfully! Invoice Number: {new_sale.invoicenumber}"
+            "message": new_sale.invoicenumber
+        })
+
+    except IntegrityError as e:
+        db.rollback()
+        error_msg = str(e)
+        if "SALE_INVOICENUMBER_PK" in error_msg:
+            return templates.TemplateResponse("/form/invoice-info.html", {
+                "request": request,
+                "today": today,
+                "error": "❌ There was a problem generating the invoice number. Please try again."
+            })
+        return templates.TemplateResponse("/form/invoice-info.html", {
+            "request": request,
+            "today": today,
+            "error": "❌ Database error. Please check your input and try again."
         })
 
     except Exception as e:
@@ -475,7 +671,11 @@ async def add_invoice(
     
 @router.get("/mailing-list-form")
 def mailing_list_form(request: Request): 
-     return templates.TemplateResponse("/form/mailing-list-form.html", {"request": request})
+    today = datetime.now().strftime('%Y-%m-%d')
+    return templates.TemplateResponse("/form/mailing-list-form.html", {
+        "request": request,
+        "today": today
+    })
 
     
 @router.post("/add-mailing-list", response_class=HTMLResponse)
@@ -567,13 +767,8 @@ def find_artwork(request: Request):
 @router.post("/get-filter", response_class=HTMLResponse)
 async def get_filtered_artworks(
     request: Request,
-<<<<<<< Updated upstream
-    artist_firstname: Optional[str] = Form(None),
-    artist_lastname: Optional[str] = Form(None),
-=======
     artist_firstname: str = Form(...),
     artist_lastname: str = Form(...),
->>>>>>> Stashed changes
     type: Optional[str] = Form(None),
     otherType: Optional[str] = Form(None),
     medium: Optional[str] = Form(None),
@@ -582,11 +777,9 @@ async def get_filtered_artworks(
     otherStyle: Optional[str] = Form(None),
     db: Session = Depends(get_db)
 ):
-
     # If all fields are empty, redirect back to the form
-    if not any([artist_firstname,artist_lastname, type, otherType, medium, otherMedium, style, otherStyle]):
+    if not any([artist_firstname, artist_lastname, type, otherType, medium, otherMedium, style, otherStyle]):
         return RedirectResponse(url=request.url_for('form_page_route_name'), status_code=303)
-        # Replace 'form_page_route_name' with your form's GET route name!
 
     # Prefer 'Other' inputs if they exist
     final_type = otherType if type == "Other" and otherType else type
@@ -594,30 +787,14 @@ async def get_filtered_artworks(
     final_style = otherStyle if style == "Other" and otherStyle else style
 
     query = db.query(Artwork).join(Artist)
-
-    # Always filter artworks that are "for sale"
     query = query.filter(Artwork.status == "for sale")
 
-<<<<<<< Updated upstream
-    # Apply artist strict matching
-    if artist_firstname and artist_lastname:
-        trimmed_firstname = func.trim(Artist.firstname)
-        trimmed_lastname = func.trim(Artist.lastname)
-
-        query = query.filter(
-            func.lower(trimmed_firstname) == artist_firstname.strip().lower(),
-            func.lower(trimmed_lastname) == artist_lastname.strip().lower()
-        )
-
-    # Apply additional filters
-=======
     # Apply artist name filters
     query = query.filter(
         Artist.firstname.ilike(f"%{artist_firstname.strip()}%"),
         Artist.lastname.ilike(f"%{artist_lastname.strip()}%")
     )
 
->>>>>>> Stashed changes
     if final_type:
         query = query.filter(Artwork.worktype.ilike(f"%{final_type}%"))
     if final_medium:
@@ -687,3 +864,175 @@ async def find_artwork_history(
         "sale": sale,
         "no_data_message": "No matching artwork found." if not artwork else None
     })
+
+@router.get("/buyer-info", response_class=HTMLResponse)
+def get_buyer_form(request: Request):
+    return templates.TemplateResponse("/form/buyer-info-form.html", {"request": request})
+
+@router.post("/buyer-info", response_class=HTMLResponse)
+async def add_buyer(
+    request: Request,
+    db: Session = Depends(get_db),
+    firstname: str = Form(...),
+    lastname: str = Form(...),
+    street: Optional[str] = Form(None),
+    zip: Optional[str] = Form(None),
+    areacode: Optional[str] = Form(None),
+    telephonenumber: Optional[str] = Form(None),
+    purchaseslastyear: Optional[float] = Form(None),
+    purchasesyeartodate: Optional[float] = Form(None)
+):
+    try:
+        print("=== Starting buyer registration process ===")
+        print("Received buyer request:", {
+            "firstname": firstname,
+            "lastname": lastname,
+            "street": street,
+            "zip": zip,
+            "areacode": areacode,
+            "telephonenumber": telephonenumber,
+            "purchaseslastyear": purchaseslastyear,
+            "purchasesyeartodate": purchasesyeartodate
+        })
+
+        # Validate required fields
+        if not firstname or not lastname:
+            print("Validation failed: Missing required fields")
+            return templates.TemplateResponse("/form/buyer-info-form.html", {
+                "request": request,
+                "error": "❌ First Name and Last Name are required."
+            })
+
+        # Validate field lengths
+        if len(firstname) > 15 or len(lastname) > 20:
+            print(f"Validation failed: Field length exceeded - First Name: {len(firstname)}, Last Name: {len(lastname)}")
+            return templates.TemplateResponse("/form/buyer-info-form.html", {
+                "request": request,
+                "error": "❌ First Name (max 15) or Last Name (max 20) exceeded."
+            })
+
+        if street and len(street) > 50:
+            print(f"Validation failed: Street length exceeded - {len(street)}")
+            return templates.TemplateResponse("/form/buyer-info-form.html", {
+                "request": request,
+                "error": "❌ Street address cannot exceed 50 characters."
+            })
+
+        # Validate ZIP code format and existence
+        if zip:
+            if not zip.isdigit() or len(zip) != 5:
+                print(f"Validation failed: Invalid ZIP format - {zip}")
+                return templates.TemplateResponse("/form/buyer-info-form.html", {
+                    "request": request,
+                    "error": "❌ ZIP code must be 5 digits."
+                })
+            
+            # Check if ZIP exists in database
+            zip_exists = db.query(ZIPS).filter(ZIPS.zip == zip.strip()).first()
+            if not zip_exists:
+                print(f"Validation failed: ZIP code not found in database - {zip}")
+                return templates.TemplateResponse("/form/buyer-info-form.html", {
+                    "request": request,
+                    "error": "❌ This ZIP code is not in our database. Please enter a valid ZIP code."
+                })
+
+        # Validate area code format
+        if areacode and not areacode.isdigit() or (areacode and len(areacode) != 3):
+            print(f"Validation failed: Invalid area code format - {areacode}")
+            return templates.TemplateResponse("/form/buyer-info-form.html", {
+                "request": request,
+                "error": "❌ Area code must be 3 digits."
+            })
+
+        # Validate telephone number format
+        if telephonenumber and not telephonenumber.isdigit() or (telephonenumber and len(telephonenumber) != 7):
+            print(f"Validation failed: Invalid telephone number format - {telephonenumber}")
+            return templates.TemplateResponse("/form/buyer-info-form.html", {
+                "request": request,
+                "error": "❌ Telephone number must be 7 digits."
+            })
+
+        print("All validations passed, checking for duplicate buyer...")
+
+        # Check for duplicate buyer
+        existing_buyer = db.query(Buyer).filter(
+            Buyer.firstname.ilike(firstname.strip()),
+            Buyer.lastname.ilike(lastname.strip()),
+            Buyer.street.ilike(street.strip() if street else ''),
+            Buyer.zip == zip.strip() if zip else None
+        ).first()
+
+        if existing_buyer:
+            print("Duplicate buyer found:", existing_buyer.__dict__)
+            return templates.TemplateResponse("/form/buyer-info-form.html", {
+                "request": request,
+                "error": "❌ A buyer with this information already exists."
+            })
+
+        print("No duplicate found, creating new buyer...")
+
+        # Create new buyer
+        new_buyer = Buyer(
+            firstname=firstname.strip(),
+            lastname=lastname.strip(),
+            street=street.strip() if street else None,
+            zip=zip.strip() if zip else None,
+            areacode=areacode.strip() if areacode else None,
+            telephonenumber=telephonenumber.strip() if telephonenumber else None,
+            purchaseslastyear=purchaseslastyear if purchaseslastyear is not None else None,
+            purchasesyeartodate=purchasesyeartodate if purchasesyeartodate is not None else None
+        )
+
+        print("New buyer object created:", new_buyer.__dict__)
+        print("Attempting to add buyer to database...")
+
+        try:
+            db.add(new_buyer)
+            db.flush()  # This will trigger the sequence
+            print("Buyer added to session, committing...")
+            db.commit()
+            print("Buyer successfully added to database")
+        except Exception as db_error:
+            print("Database error during commit:", str(db_error))
+            db.rollback()
+            raise db_error
+
+        return templates.TemplateResponse("/form/buyer-info-form.html", {
+            "request": request,
+            "success": "✅ Buyer successfully registered!"
+        })
+
+    except IntegrityError as e:
+        db.rollback()
+        error_msg = str(e)
+        print("Database integrity error:", error_msg)
+        if "BUYER_PK" in error_msg:
+            return templates.TemplateResponse("/form/buyer-info-form.html", {
+                "request": request,
+                "error": "❌ A buyer with this information already exists."
+            })
+        elif "ORA-01400" in error_msg:
+            return templates.TemplateResponse("/form/buyer-info-form.html", {
+                "request": request,
+                "error": "❌ There was a problem with the buyer ID. Please try again."
+            })
+        elif "ORA-02291" in error_msg:
+            return templates.TemplateResponse("/form/buyer-info-form.html", {
+                "request": request,
+                "error": "❌ Invalid ZIP code. Please enter a valid ZIP code."
+            })
+        return templates.TemplateResponse("/form/buyer-info-form.html", {
+            "request": request,
+            "error": f"❌ Database error: {error_msg}"
+        })
+
+    except Exception as e:
+        db.rollback()
+        error_type = type(e).__name__
+        error_msg = str(e)
+        print(f"Unexpected error of type {error_type}:", error_msg)
+        print("Full error details:", e.__dict__ if hasattr(e, '__dict__') else "No additional details")
+        return templates.TemplateResponse("/form/buyer-info-form.html", {
+            "request": request,
+            "error": f"❌ Error ({error_type}): {error_msg}"
+        })

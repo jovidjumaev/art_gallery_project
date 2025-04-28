@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from datetime import date
 from collections import namedtuple
 from starlette.exceptions import HTTPException as StarletteHTTPException
-
+from middleware.auth import AuthMiddleware
 
 from models.artist import Artist
 from models.collector import Collector
@@ -26,8 +26,11 @@ gallery_app = FastAPI()
 gallery_app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+# Apply authentication middleware to all routes
+gallery_app.add_middleware(AuthMiddleware)
+
 @gallery_app.get("/", response_class=HTMLResponse)
-def read_artists(request: Request):
+async def read_artists(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
 
 @gallery_app.exception_handler(404)
@@ -35,7 +38,7 @@ async def not_found(request: Request, exc: StarletteHTTPException):
     return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
 
 @gallery_app.get('/about', response_class=HTMLResponse)
-def about_me(request: Request): 
+async def about_me(request: Request): 
     return templates.TemplateResponse("about.html", {"request": request})
 
 # Include additional routers

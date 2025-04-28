@@ -18,7 +18,7 @@
 <body>
   <nav class="navbar">
     <div class="nav-left">
-      <span class="logo">MySite</span>
+      <a href="/artgalleryproject" class="logo">FAG</a>
 
       <a href="#" class="nav-link" data-url="/">Home</a>
       <a href="#" class="nav-link" data-url="/report">Report</a>
@@ -28,8 +28,27 @@
       <a href="#" class="nav-link" data-url="/form/find-artwork-history-form">Record</a>
     </div>
     <div class="nav-right">
-      <a href="#" class="nav-link" data-url="/auth/login">Login</a>
-      <a href="#" class="nav-link" data-url="/auth/register">Sign Up</a>
+      {% if request.cookies.get('username') %}
+      <div class="user-menu">
+        <button class="user-menu-button">
+          <span class="user-icon">👤</span>
+          <span class="username">{{ request.cookies.get('username') }}</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+        <div class="user-dropdown">
+          <a href="/artgalleryproject/auth/profile" class="dropdown-item">
+            <span class="profile-icon">⚙️</span>
+            Profile Settings
+          </a>
+          <a href="/artgalleryproject/auth/logout" class="dropdown-item">
+            <span class="logout-icon">🚪</span>
+            Sign Out
+          </a>
+        </div>
+      </div>
+      {% else %}
+      <a href="/artgalleryproject/auth/login" class="login-link">Login</a>
+      {% endif %}
     </div>
   </nav>
 
@@ -47,5 +66,112 @@
   <script src="{{ request.scope.root_path }}/static/js/form-select.js?v=99"></script>
   <script src="{{ request.scope.root_path }}/static/js/artist-form-input.js?v=99"></script>
   {% block script %}{% endblock %}
+
+  <style>
+    .user-menu {
+      position: relative;
+      display: inline-block;
+    }
+
+    .user-menu-button {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .user-menu-button:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    .user-icon {
+      font-size: 1.2rem;
+    }
+
+    .username {
+      font-weight: 500;
+      color: white;
+    }
+
+    .dropdown-arrow {
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+      color: white;
+    }
+
+    .user-menu:hover .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+
+    .user-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background-color: white;
+      min-width: 180px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      padding: 0.5rem 0;
+      margin-top: 0.5rem;
+      z-index: 1000;
+    }
+
+    .user-menu:hover .user-dropdown {
+      display: block;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      color: #333;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f5f5f5;
+    }
+
+    .profile-icon, .logout-icon {
+      font-size: 1.1rem;
+    }
+
+    /* Add a small delay to the dropdown menu */
+    .user-dropdown {
+      transition: opacity 0.2s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .user-menu:hover .user-dropdown {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .login-link {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 8px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-size: 16px;
+    }
+
+    .login-link:hover {
+      background-color: #4caf50;
+      color: #fff;
+    }
+  </style>
 </body>
 </html>

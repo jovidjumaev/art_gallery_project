@@ -1,6 +1,16 @@
 {% extends 'index.html' %}
 
 {% block content %}
+{% if success %}
+<div class="success-message">
+    <h2>✅ Artwork Successfully Added!</h2>
+    <div class="success-actions">
+        <a href="/artgalleryproject/form/artwork-form" class="btn-primary">Add Another Artwork</a>
+        <a href="/artgalleryproject" class="btn-secondary">Go to Home</a>
+    </div>
+</div>
+{% else %}
+{{error}}
 <form method="POST" action="/artgalleryproject/form/add-artwork" class="form-container" novalidate>
     {{error}}
     {{success}}
@@ -10,19 +20,24 @@
         <p>Please fill out the basic information about the artwork for its description card.</p>
 
         <label>Artist Last Name *</label>
-        <input type="text" name="artistLastName" maxlength="15" required>
+        <input type="text" name="artistLastName" maxlength="15" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')" required>
+        <small>Maximum 15 characters, letters only</small>
 
         <label>Artist First Name *</label>
-        <input type="text" name="artistFirstName" maxlength="15" required>
+        <input type="text" name="artistFirstName" maxlength="15" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')" required>
+        <small>Maximum 15 characters, letters only</small>
 
         <label>Title *</label>
         <input type="text" name="title" maxlength="50" required>
+        <small>Maximum 50 characters</small>
 
         <label>Year Completed *</label>
         <input type="number" name="yearCompleted" min="1500" max="2025" required>
+        <small>Must be between 1500 and 2025</small>
 
         <label>Size *</label>
         <input type="text" name="size" placeholder="e.g., 24x36 inches" required>
+        <small>Maximum 15 characters</small>
 
         <label>Type *</label>
         <select name="usualType" required>
@@ -32,9 +47,10 @@
             <option value="Photography">Photography</option>
             <option value="Digital Art">Digital Art</option>
             <option value="Mixed Media">Mixed Media</option>
-            <option value="other">Other</option>
+            <option value="Other">Other</option>
         </select>
-        <input type="text" id="otherType" name="otherType" placeholder="Specify Type (if Other)" class="hidden">
+        <input type="text" id="otherType" name="otherType" placeholder="Specify Type (if Other)" class="hidden" maxlength="20" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')">
+        <small class="other-input-hint">Letters, spaces, hyphens, and apostrophes only</small>
 
         <label>Medium *</label>
         <select name="usualMedium" required>
@@ -44,9 +60,10 @@
             <option value="Watercolor">Watercolor</option>
             <option value="Bronze">Bronze</option>
             <option value="Marble">Marble</option>
-            <option value="other">Other</option>
+            <option value="Other">Other</option>
         </select>
-        <input type="text" id="otherMedium" name="otherMedium" placeholder="Specify Medium (if Other)" class="hidden">
+        <input type="text" id="otherMedium" name="otherMedium" placeholder="Specify Medium (if Other)" class="hidden" maxlength="15" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')">
+        <small class="other-input-hint">Letters, spaces, hyphens, and apostrophes only</small>
 
         <label>Style *</label>
         <select name="usualStyle" required>
@@ -56,9 +73,10 @@
             <option value="Impressionism">Impressionism</option>
             <option value="Modern">Modern</option>
             <option value="Contemporary">Contemporary</option>
-            <option value="other">Other</option>
+            <option value="Other">Other</option>
         </select>
-        <input type="text" id="otherStyle" name="otherStyle" placeholder="Specify Style (if Other)" class="hidden">
+        <input type="text" id="otherStyle" name="otherStyle" placeholder="Specify Style (if Other)" class="hidden" maxlength="15" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')">
+        <small class="other-input-hint">Letters, spaces, hyphens, and apostrophes only</small>
     </div>
 
     <!-- Owner Information -->
@@ -67,31 +85,40 @@
         <p>If owned by someone other than the artist, please complete this section with the owner's information.</p>
 
         <label>Owner Social Security Number (9 digits)</label>
-        <input type="text" name="ownerSSN" maxlength="9">
+        <input type="text" name="ownerSSN" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <small>Exactly 9 digits</small>
 
         <label>Owner Last Name</label>
-        <input type="text" name="ownerLastName" maxlength="15">
+        <input type="text" name="ownerLastName" maxlength="15" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')">
+        <small>Maximum 15 characters, letters only</small>
 
         <label>Owner First Name</label>
-        <input type="text" name="ownerFirstName" maxlength="15">
+        <input type="text" name="ownerFirstName" maxlength="15" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')">
+        <small>Maximum 15 characters, letters only</small>
 
         <label>Street</label>
-        <input type="text" name="ownerStreet" maxlength="30">
+        <input type="text" name="ownerStreet" maxlength="30" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s.,-']/g, '')">
+        <small>Maximum 30 characters</small>
 
         <label>City</label>
-        <input type="text" name="ownerCity">
+        <input type="text" name="ownerCity" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')">
+        <small>Letters and spaces only</small>
 
         <label>State (2 capital letters)</label>
-        <input type="text" name="ownerState" maxlength="2">
+        <input type="text" name="ownerState" maxlength="2" oninput="this.value = this.value.replace(/[^A-Z]/g, '').toUpperCase()">
+        <small>Exactly 2 capital letters (e.g., SC)</small>
 
         <label>ZIP (5 digits)</label>
-        <input type="text" name="ownerZip" maxlength="5">
+        <input type="text" name="ownerZip" maxlength="5" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <small>Exactly 5 digits</small>
 
         <label>Area Code (3 digits)</label>
-        <input type="text" name="ownerAreaCode" maxlength="3">
+        <input type="text" name="ownerAreaCode" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <small>Exactly 3 digits</small>
 
         <label>Phone Number (7 digits)</label>
-        <input type="text" name="ownerPhoneNumber" maxlength="7">
+        <input type="text" name="ownerPhoneNumber" maxlength="7" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <small>Exactly 7 digits</small>
     </div>
 
     <!-- Gallery Information -->
@@ -99,27 +126,79 @@
         <h3>Gallery Information</h3>
         <p>If the piece is chosen to be offered for sale by the gallery, please complete this section.</p>
 
-        <label>Date Listed *</label>
-        <input type="date" name="dateListed" required>
+        <div class="form-group">
+            <label>Date Listed *</label>
+            <input type="date" name="dateListed" max="{{ today }}" required>
+            <small>Cannot select future dates</small>
+        </div>
 
         <label>Asking Price (USD) *</label>
         <input type="number" name="askingPrice" min="0" step="0.01" required>
+        <small>Must be greater than 0</small>
 
         <label>Status *</label>
         <select name="status" required>
-            <option value="" disabled>Select Status</option>
             <option value="for sale" selected>For Sale</option>
-            <option value="sold">Sold</option>
-            <option value="returned">Returned</option>
         </select>
+        <small>Artwork is set for sale</small>
     </div>
 
     <div class="form-actions">
         <button type="submit" class="btn-submit">Submit Artwork</button>
-        <a href="/" class="btn-cancel">Cancel</a>
+        <a href="/artgalleryproject/form" class="btn-cancel">Cancel</a>
     </div>
 </form>
+{% endif %}
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Show/hide "Other" input fields based on selection
+    const typeSelect = document.querySelector('select[name="usualType"]');
+    const mediumSelect = document.querySelector('select[name="usualMedium"]');
+    const styleSelect = document.querySelector('select[name="usualStyle"]');
+    
+    const otherTypeInput = document.getElementById('otherType');
+    const otherMediumInput = document.getElementById('otherMedium');
+    const otherStyleInput = document.getElementById('otherStyle');
+
+    const otherTypeHint = otherTypeInput.nextElementSibling;
+    const otherMediumHint = otherMediumInput.nextElementSibling;
+    const otherStyleHint = otherStyleInput.nextElementSibling;
+
+    function toggleOtherInput(select, input, hint) {
+        if (select.value === 'Other') {
+            input.classList.remove('hidden');
+            input.required = true;
+            hint.classList.add('visible');
+        } else {
+            input.classList.add('hidden');
+            input.required = false;
+            hint.classList.remove('visible');
+        }
+    }
+
+    typeSelect.addEventListener('change', () => toggleOtherInput(typeSelect, otherTypeInput, otherTypeHint));
+    mediumSelect.addEventListener('change', () => toggleOtherInput(mediumSelect, otherMediumInput, otherMediumHint));
+    styleSelect.addEventListener('change', () => toggleOtherInput(styleSelect, otherStyleInput, otherStyleHint));
+});
+</script>
+
+<style>
+.hidden {
+    display: none;
+}
+
+.other-input-hint {
+    display: none;
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.other-input-hint.visible {
+    display: block;
+}
+</style>
 
 {% endblock %}
  

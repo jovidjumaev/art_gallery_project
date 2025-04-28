@@ -1,142 +1,252 @@
-
 {% extends 'index.html' %}
 
 {% block content %}
+{% if success %}
+<div class="success-message">
+    <h2>✅ Artist Successfully Registered!</h2>
+    <div class="success-actions">
+        <a href="/artgalleryproject/form/artist-form" class="btn-primary">Add Another Artist</a>
+        <a href="/artgalleryproject" class="btn-secondary">Go to Home</a>
+    </div>
+</div>
+{% else %}
 <form method="POST" id="artistForm" action="/artgalleryproject/form/artist-form">
-
-  <!-- Interview Details -->
-  <div class="form-section">
-    {{success}}
     {{error}}
-    <h3>Interview Details</h3>
+    <!-- Interview Details -->
+    <div class="form-section">
+        <h3>Interview Details</h3>
 
-    <div class="form-group">
-      <label>Date of Interview</label>
-      <input type="date" name="interviewDate" id="interviewDate" required>
-  
+        <div class="form-group">
+            <label>Date of Interview *</label>
+            <input type="date" name="interviewDate" id="interviewDate" max="{{ today }}" required>
+            <small>Cannot select future dates</small>
+        </div>
+        
+        <div class="form-group">
+            <label>Name of Interviewer *</label>
+            <input type="text" name="interviewerName" maxlength="35" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')" required>
+            <small>Letters, spaces, hyphens, and apostrophes only</small>
+        </div>
     </div>
-    
-    <div class="form-group">
-      <label>Name of Interviewer</label>
-      <input type="text" name="interviewerName" maxlength="30" pattern="[a-zA-Z\s-']*" required>
-      <small>Maximum 30 characters, letters only</small>
+
+    <!-- Personal Information -->
+    <div class="form-section">
+        <h3>Personal Information</h3>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Last Name *</label>
+                <input type="text" name="lastName" maxlength="20" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')" required>
+                <small>Letters, spaces, hyphens, and apostrophes only</small>
+            </div>
+
+            <div class="form-group">
+                <label>First Name *</label>
+                <input type="text" name="firstName" maxlength="15" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')" required>
+                <small>Letters, spaces, hyphens, and apostrophes only</small>
+            </div>
+
+            <div class="form-group">
+                <label>Street *</label>
+                <input type="text" name="street" maxlength="50" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s.,-']/g, '')" required>
+                <small>Letters, numbers, spaces, and basic punctuation</small>
+            </div>
+
+            <div class="form-group">
+                <label>City *</label>
+                <input type="text" name="city" required>
+            </div>
+
+            <div class="form-group">
+                <label>State *</label>
+                <input type="text" name="state" maxlength="2" pattern="[A-Z]{2}" required>
+                <small>2 capital letters (e.g., SC)</small>
+            </div>
+
+            <div class="form-group">
+                <label>ZIP *</label>
+                <input type="text" name="zip" maxlength="5" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                <small>Exactly 5 digits</small>
+            </div>
+
+            <div class="form-group">
+                <label>Area Code *</label>
+                <input type="text" name="areaCode" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                <small>Exactly 3 digits</small>
+            </div>
+
+            <div class="form-group">
+                <label>Telephone Number *</label>
+                <input type="text" name="telephoneNumber" maxlength="7" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                <small>Exactly 7 digits</small>
+            </div>
+
+            <div class="form-group">
+                <label>Social Security Number *</label>
+                <input type="text" name="socialSecurityNumber" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                <small>Exactly 9 digits</small>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Personal Information -->
-  <div class="form-section">
-    <h3>Personal Information</h3>
+    <!-- Artwork Information -->
+    <div class="form-section">
+        <h3>Artwork Information</h3>
 
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Last Name</label>
-        <input type="text" name="lastName" maxlength="15" pattern="[a-zA-Z\s-']*" required>
-      </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Usual Medium *</label>
+                <select name="usualMedium" required>
+                    <option value="" selected disabled>Select Medium</option>
+                    <option value="Oil">Oil</option>
+                    <option value="Acrylic">Acrylic</option>
+                    <option value="Watercolor">Watercolor</option>
+                    <option value="Bronze">Bronze</option>
+                    <option value="Marble">Marble</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input type="text" id="otherMedium" name="otherMedium" placeholder="Specify Medium (if Other)" class="hidden" maxlength="15" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')">
+                <small class="other-input-hint">Letters, spaces, hyphens, and apostrophes only</small>
+            </div>
 
-      <div class="form-group">
-        <label>First Name</label>
-        <input type="text" name="firstName" maxlength="15" pattern="[a-zA-Z\s-']*" required>
-      </div>
+            <div class="form-group">
+                <label>Usual Style *</label>
+                <select name="usualStyle" required>
+                    <option value="" selected disabled>Select Style</option>
+                    <option value="Abstract">Abstract</option>
+                    <option value="Realism">Realism</option>
+                    <option value="Impressionism">Impressionism</option>
+                    <option value="Modern">Modern</option>
+                    <option value="Contemporary">Contemporary</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input type="text" id="otherStyle" name="otherStyle" placeholder="Specify Style (if Other)" class="hidden" maxlength="15" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')">
+                <small class="other-input-hint">Letters, spaces, hyphens, and apostrophes only</small>
+            </div>
 
-      <div class="form-group">
-        <label>Street</label>
-        <input type="text" name="street" required>
-      </div>
-
-      <div class="form-group">
-        <label>City</label>
-        <input type="text" name="city" required>
-      </div>
-
-      <div class="form-group">
-        <label>State</label>
-        <input type="text" name="state" maxlength="2" pattern="[A-Z]{2}" required>
-        <small>2 capital letters (e.g., SC)</small>
-      </div>
-
-      <div class="form-group">
-        <label>ZIP</label>
-        <input type="text" name="zip" maxlength="5" pattern="[0-9]{5}" required>
-        <small>5 digits only (e.g., 12345)</small>
-      </div>
-
-      <div class="form-group">
-        <label>Area Code</label>
-        <input type="text" name="areaCode" maxlength="3" pattern="[0-9]{3}" required>
-        <small>3 digits (e.g., 864)</small>
-      </div>
-
-      <div class="form-group">
-        <label>Telephone Number</label>
-        <input type="text" name="telephoneNumber" maxlength="7" pattern="[0-9]{7}" required>
-        <small>7 digits (e.g., 5551234)</small>
-      </div>
-
-      <div class="form-group">
-        <label>Social Security Number</label>
-        <input type="text" name="socialSecurityNumber" maxlength="9" pattern="[0-9]{9}" required>
-        <small>9 digits (e.g., 123456789)</small>
-      </div>
+            <div class="form-group">
+                <label>Usual Type *</label>
+                <select name="usualType" required>
+                    <option value="" selected disabled>Select Type</option>
+                    <option value="Painting">Painting</option>
+                    <option value="Sculpture">Sculpture</option>
+                    <option value="Photography">Photography</option>
+                    <option value="Digital Art">Digital Art</option>
+                    <option value="Mixed Media">Mixed Media</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input type="text" id="otherType" name="otherType" placeholder="Specify Type (if Other)" class="hidden" maxlength="20" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')">
+                <small class="other-input-hint">Letters, spaces, hyphens, and apostrophes only</small>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Art Information -->
-  <div class="form-section">
-    <h3>Art Information</h3>
-
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Usual Type</label>
-        <select name="usualType" id="typeSelect" required>
-          <option value="" disabled selected>Select Type</option>
-          <option value="Painting">Painting</option>
-          <option value="Sculpture">Sculpture</option>
-          <option value="Photography">Photography</option>
-          <option value="Digital Art">Digital Art</option>
-          <option value="Mixed Media">Mixed Media</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="text" id="otherType" name="otherType" class="hidden" placeholder="Specify other type">
-      </div>
-
-      <div class="form-group">
-        <label>Usual Medium</label>
-        <select name="usualMedium" id="mediumSelect" required>
-          <option value="" disabled selected>Select Medium</option>
-          <option value="Oil">Oil</option>
-          <option value="Acrylic">Acrylic</option>
-          <option value="Watercolor">Watercolor</option>
-          <option value="Bronze">Bronze</option>
-          <option value="Marble">Marble</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="text" id="otherMedium" name="otherMedium" class="hidden" placeholder="Specify other medium">
-      </div>
-
-      <div class="form-group">
-        <label>Usual Style</label>
-        <select name="usualStyle" id="styleSelect" required>
-          <option value="" disabled selected>Select Style</option>
-          <option value="Abstract">Abstract</option>
-          <option value="Realism">Realism</option>
-          <option value="Impressionism">Impressionism</option>
-          <option value="Modern">Modern</option>
-          <option value="Contemporary">Contemporary</option>
-          <option value="Folk">Folk</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="text" id="otherStyle" name="otherStyle" class="hidden" placeholder="Specify other style">
-      </div>
+    <div class="form-actions">
+        <button type="submit" class="btn-submit">Submit Artist</button>
+        <a href="/artgalleryproject/form" class="btn-cancel">Cancel</a>
     </div>
-  </div>
-
-  <!-- Submit Section -->
-  <div class="form-actions">
-    <a href="/" class="button cancel">Cancel</a>
-    <button type="submit" class="button submit">Add Artist</button>
-  </div>
-
 </form>
+{% endif %}
 
-  {% endblock %}
+<style>
+.success-message {
+    text-align: center;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+.success-message h2 {
+    color: #28a745;
+    margin-bottom: 1.5rem;
+}
+
+.success-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.hidden {
+    display: none;
+}
+
+small {
+    display: block;
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.other-input-hint {
+    display: none;
+}
+
+.other-input-hint.visible {
+    display: block;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Show/hide "Other" input fields based on selection
+    const mediumSelect = document.querySelector('select[name="usualMedium"]');
+    const styleSelect = document.querySelector('select[name="usualStyle"]');
+    const typeSelect = document.querySelector('select[name="usualType"]');
+    
+    const otherMediumInput = document.getElementById('otherMedium');
+    const otherStyleInput = document.getElementById('otherStyle');
+    const otherTypeInput = document.getElementById('otherType');
+
+    const otherMediumHint = otherMediumInput.nextElementSibling;
+    const otherStyleHint = otherStyleInput.nextElementSibling;
+    const otherTypeHint = otherTypeInput.nextElementSibling;
+
+    function toggleOtherInput(select, input, hint) {
+        if (select.value === 'Other') {
+            input.classList.remove('hidden');
+            input.required = true;
+            hint.classList.add('visible');
+        } else {
+            input.classList.add('hidden');
+            input.required = false;
+            hint.classList.remove('visible');
+        }
+    }
+
+    mediumSelect.addEventListener('change', () => toggleOtherInput(mediumSelect, otherMediumInput, otherMediumHint));
+    styleSelect.addEventListener('change', () => toggleOtherInput(styleSelect, otherStyleInput, otherStyleHint));
+    typeSelect.addEventListener('change', () => toggleOtherInput(typeSelect, otherTypeInput, otherTypeHint));
+});
+</script>
+{% endblock %}
  

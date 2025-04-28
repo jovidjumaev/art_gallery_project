@@ -1,0 +1,225 @@
+{% extends 'index.html' %}
+
+{% block content %}
+{% if success %}
+<div class="success-message">
+    <h2>✅ Buyer Successfully Registered!</h2>
+    <div class="success-actions">
+        <a href="/artgalleryproject/form/buyer-info" class="btn-primary">Register Another Buyer</a>
+        <a href="/artgalleryproject" class="btn-secondary">Go to Home</a>
+    </div>
+</div>
+{% else %}
+<form method="POST" id="buyerForm" action="/artgalleryproject/form/buyer-info">
+    {% if error %}
+    <div class="error-message">
+        {{ error }}
+    </div>
+    {% endif %}
+    
+    <!-- Personal Information -->
+    <div class="form-section">
+        <h3>Personal Information</h3>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Last Name *</label>
+                <input type="text" name="lastname" maxlength="20" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')" required>
+                <small>Letters, spaces, hyphens, and apostrophes only</small>
+            </div>
+
+            <div class="form-group">
+                <label>First Name *</label>
+                <input type="text" name="firstname" maxlength="15" oninput="this.value = this.value.replace(/[^A-Za-z\s-']/g, '')" required>
+                <small>Letters, spaces, hyphens, and apostrophes only</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="form-section">
+        <h3>Contact Information</h3>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Street *</label>
+                <input type="text" name="street" maxlength="50" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s.,-']/g, '')" required>
+                <small>Letters, numbers, spaces, and basic punctuation</small>
+            </div>
+
+            <div class="form-group">
+                <label>ZIP *</label>
+                <input type="text" name="zip" maxlength="5" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                <small>Must be a valid 5-digit ZIP code in our database</small>
+            </div>
+
+            <div class="form-group">
+                <label>Area Code *</label>
+                <input type="text" name="areacode" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                <small>Exactly 3 digits</small>
+            </div>
+
+            <div class="form-group">
+                <label>Telephone Number *</label>
+                <input type="text" name="telephonenumber" maxlength="7" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                <small>Exactly 7 digits</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn-submit">Register Buyer</button>
+        <a href="/artgalleryproject/form" class="btn-cancel">Cancel</a>
+    </div>
+</form>
+{% endif %}
+
+<style>
+.success-message {
+    text-align: center;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+.success-message h2 {
+    color: #28a745;
+    margin-bottom: 1.5rem;
+}
+
+.success-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.form-section {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.form-section h3 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.btn-submit {
+    background-color: #4CAF50;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #45a049;
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268;
+}
+
+small {
+    display: block;
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+</style>
+{% endblock %}

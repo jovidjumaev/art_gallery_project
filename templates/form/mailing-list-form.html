@@ -1,16 +1,24 @@
 {% extends 'index.html' %}
 
 {% block content %}
-
-{{success}}
+{% if success %}
+<div class="success-message">
+    <h2>✅ Successfully Added to Mailing List!</h2>
+    <div class="success-actions">
+        <a href="/artgalleryproject/form/mailing-list-form" class="btn-primary">Add Another Entry</a>
+        <a href="/artgalleryproject" class="btn-secondary">Go to Home</a>
+    </div>
+</div>
+{% else %}
 {{error}}
 <form method="POST" action="/artgalleryproject/form/add-mailing-list" novalidate>
     <!-- Date Information -->
     <div>
         <h5>📅 Date</h5>
         <div>
-            <label>Today's Date</label>
-            <input type="date" name="signupDate" required>
+            <label>Today's Date *</label>
+            <input type="date" name="signupDate" value="{{ today }}" max="{{ today }}" required>
+            <small>Cannot select future dates</small>
         </div>
     </div>
 
@@ -19,31 +27,31 @@
         <h5>👤 Contact Information</h5>
 
         <div>
-            <label>Last Name</label>
+            <label>Last Name *</label>
             <input type="text" name="lastName" required
                    pattern="[A-Za-z]{1,15}" maxlength="15"
                    title="Please enter up to 15 letters only">
         </div>
 
         <div>
-            <label>First Name</label>
+            <label>First Name *</label>
             <input type="text" name="firstName" required
                    pattern="[A-Za-z]{1,15}" maxlength="15"
                    title="Please enter up to 15 letters only">
         </div>
 
         <div>
-            <label>Street</label>
+            <label>Street *</label>
             <input type="text" name="street" required>
         </div>
 
         <div>
-            <label>City</label>
+            <label>City *</label>
             <input type="text" name="city" required>
         </div>
 
         <div>
-            <label>State</label>
+            <label>State *</label>
             <input type="text" name="state" required
                    pattern="[A-Z]{2}" maxlength="2"
                    style="text-transform: uppercase;"
@@ -52,21 +60,21 @@
         </div>
 
         <div>
-            <label>ZIP</label>
+            <label>ZIP *</label>
             <input type="text" name="zip" required
                    pattern="[0-9]{5}" maxlength="5"
                    title="Please enter exactly 5 digits">
         </div>
 
         <div>
-            <label>Area Code</label>
+            <label>Area Code *</label>
             <input type="text" name="areaCode" required
                    pattern="[0-9]{3}" maxlength="3"
                    title="Please enter exactly 3 digits">
         </div>
 
         <div>
-            <label>Telephone Number</label>
+            <label>Telephone Number *</label>
             <input type="text" name="telephoneNumber" required
                    pattern="[0-9]{7}" maxlength="7"
                    title="Please enter exactly 7 digits">
@@ -137,10 +145,11 @@
     </div>
 
     <div>
-        <a href="/">Cancel</a>
+        <a href="/artgalleryproject/form">Cancel</a>
         <button type="submit">Join Mailing List</button>
     </div>
 
 </form>
+{% endif %}
 
 {% endblock %}
