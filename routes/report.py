@@ -527,3 +527,5 @@ def get_individual_sale(
         "forSale_works": for_sale_artworks,
         "total_asking_price": total_asking_price
     })
+
+

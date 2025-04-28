@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="form-wrapper">
+  <h1>🔍 Find Artwork History</h1>
+
+  <form method="POST" action="/artgalleryproject/form/find-artwork-history" class="history-search-form">
+    <div class="form-group">
+      <label for="artist_name">Artist Name</label>
+      <input type="text" id="artist_name" name="artist_name" placeholder="Enter artist name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="artwork_title">Artwork Title</label>
+      <input type="text" id="artwork_title" name="artwork_title" placeholder="Enter artwork title" required>
+    </div>
+
+    <div class="form-group">
+      <button type="submit" class="submit-button">Find History</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="artwork-history-wrapper">
+  <h1>🎨 Artwork History: {{ artwork.worktitle }}</h1>
+
+  <div class="artwork-details">
+    <h2>📋 Artwork Details</h2>
+    <p><strong>Artist ID:</strong> {{ artwork.artistid }}</p>
+    <p><strong>Title:</strong> {{ artwork.worktitle }}</p>
+    <p><strong>Year Completed:</strong> {{ artwork.workyearcompleted }}</p>
+    <p><strong>Type:</strong> {{ artwork.worktype }}</p>
+    <p><strong>Medium:</strong> {{ artwork.workmedium }}</p>
+    <p><strong>Style:</strong> {{ artwork.workstyle }}</p>
+    <p><strong>Size:</strong> {{ artwork.worksize }}</p>
+    <p><strong>Asking Price:</strong> ${{ artwork.askingprice }}</p>
+    <p><strong>Date Listed:</strong> {{ artwork.datelisted }}</p>
+    {% if artwork.datereturned %}
+      <p><strong>Date Returned:</strong> {{ artwork.datereturned }}</p>
+    {% else %}
+      <p><strong>Date Returned:</strong> Still listed</p>
+    {% endif %}
+    <p><strong>Status:</strong> {{ artwork.status }}</p>
+  </div>
+
+  <div class="show-history">
+    <h2>🎭 Show History</h2>
+    {% if shows %}
+      <ul>
+        {% for show in shows %}
+          <li>Shown on {{ show.dateshown }} in Show ID: {{ show.showid }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No show history available for this artwork.</p>
+    {% endif %}
+  </div>
+
+  <div class="sale-info">
+    <h2>💵 Sale Information</h2>
+    {% if sale %}
+      <p><strong>Sale Date:</strong> {{ sale.saledate }}</p>
+      <p><strong>Sale Price:</strong> ${{ sale.saleprice }}</p>
+      <p><strong>Amount Remitted to Owner:</strong> ${{ sale.amountremittedtoowner }}</p>
+      <p><strong>Buyer ID:</strong> {{ sale.buyerid }}</p>
+      <p><strong>Salesperson SSN:</strong> {{ sale.salespersonssn }}</p>
+    {% else %}
+      <p>This artwork has not been sold yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

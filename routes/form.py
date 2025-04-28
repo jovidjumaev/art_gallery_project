@@ -1,7 +1,7 @@
 from decimal import ROUND_HALF_UP, Decimal
 from typing import Optional
 from fastapi import APIRouter, Depends, Request, Form
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from oracledb import DataError, IntegrityError
 from datetime import datetime
@@ -605,3 +605,61 @@ async def get_filtered_artworks(
         return templates.TemplateResponse("no_data.html", {"request": request, "message": message})
 
     return templates.TemplateResponse("filtered_artworks.html", {"request": request, "artworks": artworks})
+
+
+@router.get("/find-artwork-history-form", response_class=HTMLResponse)
+async def show_find_artwork_history_form(request: Request):
+    return templates.TemplateResponse("find_artwork_history_form.html", {"request": request})
+
+@router.post("/find-artwork-history", response_class=HTMLResponse)
+async def find_artwork_history(
+    request: Request,
+    artist_name: str = Form(...),
+    artwork_title: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    # Split artist name into first and last
+    name_parts = artist_name.strip().split(" ", 1)
+    artist_firstname = name_parts[0]
+    artist_lastname = name_parts[1] if len(name_parts) > 1 else ""
+
+    # If the form was not filled (empty POST), redirect to form
+    if not artist_name or not artwork_title:
+        return RedirectResponse(url="/artgalleryproject/form/find-artwork-history-form", status_code=303)
+    # Find the artwork by artist name and artwork title
+    
+    artwork = (
+        db.query(Artwork)
+        .join(Artist, Artwork.artistid == Artist.artistid)
+        .filter(
+            Artwork.worktitle.ilike(f"%{artwork_title}%"),
+            Artist.firstname.ilike(f"%{artist_firstname}%"),
+            Artist.lastname.ilike(f"%{artist_lastname}%")
+        )
+        .first()
+    )
+
+    if not artwork:
+        message = "No matching artwork found."
+        return templates.TemplateResponse("no_data.html", {"request": request, "message": message})
+
+    # Find shows the artwork appeared in
+    shows = (
+        db.query(ShownIn)
+        .filter(ShownIn.artworkid == artwork.artworkid)
+        .all()
+    )
+
+    # Find sale information if it was sold
+    sale = (
+        db.query(Sale)
+        .filter(Sale.artworkid == artwork.artworkid)
+        .first()
+    )
+
+    return templates.TemplateResponse("artwork_history.html", {
+        "request": request,
+        "artwork": artwork,
+        "shows": shows,
+        "sale": sale
+    })
