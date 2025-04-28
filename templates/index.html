@@ -25,7 +25,7 @@
       <a href="#" class="nav-link" data-url="/form">Form</a>
       <a href="#" class="nav-link" data-url="/about">About</a>
       <a href="#" class="nav-link" data-url="/form/find-artwork">Find Artwork</a>
-      <a href="#" class="nav-link" data-url="/form/find-artwork-history-form">Record</a>
+      <a href="#" class="nav-link" data-url="/form/find-artwork-history-form">Artwork History</a>
     </div>
     <div class="nav-right">
       {% if request.cookies.get('username') %}
@@ -106,12 +106,11 @@
       color: white;
     }
 
-    .user-menu:hover .dropdown-arrow {
+    .user-menu.active .dropdown-arrow {
       transform: rotate(180deg);
     }
 
     .user-dropdown {
-      display: none;
       position: absolute;
       right: 0;
       top: 100%;
@@ -122,10 +121,14 @@
       padding: 0.5rem 0;
       margin-top: 0.5rem;
       z-index: 1000;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
     }
 
-    .user-menu:hover .user-dropdown {
+    .user-menu.active .user-dropdown {
       display: block;
+      opacity: 1;
     }
 
     .dropdown-item {
@@ -146,18 +149,6 @@
       font-size: 1.1rem;
     }
 
-    /* Add a small delay to the dropdown menu */
-    .user-dropdown {
-      transition: opacity 0.2s ease;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .user-menu:hover .user-dropdown {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
     .login-link {
       color: #fff;
       text-decoration: none;
@@ -173,5 +164,39 @@
       color: #fff;
     }
   </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const userMenu = document.querySelector('.user-menu');
+      const userMenuButton = document.querySelector('.user-menu-button');
+      const userDropdown = document.querySelector('.user-dropdown');
+      let timeoutId;
+
+      function showDropdown() {
+        clearTimeout(timeoutId);
+        userMenu.classList.add('active');
+      }
+
+      function hideDropdown() {
+        timeoutId = setTimeout(() => {
+          userMenu.classList.remove('active');
+        }, 300); // 300ms delay before hiding
+      }
+
+      userMenu.addEventListener('mouseenter', showDropdown);
+      userMenu.addEventListener('mouseleave', hideDropdown);
+      userMenuButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        userMenu.classList.toggle('active');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!userMenu.contains(e.target)) {
+          userMenu.classList.remove('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
