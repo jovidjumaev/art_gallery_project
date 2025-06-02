@@ -1,12 +1,14 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from urllib.parse import quote_plus
+import os
+import getpass
 
-username = "jjumaev"
-password = "34fgres3456@2001"
-host = "csdb.fu.campus"
-port = 1521
-service_name = "CS40"  # match exactly
+username = os.getenv("DB_USERNAME")
+password = getpass.getpass(prompt="Enter your database password: ")
+host = os.getenv("DB_HOST")
+port = int(os.getenv("DB_PORT"))
+service_name = os.getenv("DB_SERVICE_NAME")
 
 encoded_password = quote_plus(password)
 
